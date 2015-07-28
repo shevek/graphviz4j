@@ -5,6 +5,7 @@ buildscript {
 apply plugin: 'org.anarres.stdproject'
 stdproject {
 	javadocGroup "Graphviz Graph Builder", "org.anarres.graphviz.builder"
+	javadocGroup "Graphviz Graph Parser", "org.anarres.graphviz.parser"
 }
 
 subprojects {
