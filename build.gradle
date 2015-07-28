@@ -1,0 +1,45 @@
+buildscript {
+	apply from: file('gradle/buildscript.gradle'), to: buildscript
+}
+
+apply plugin: 'org.anarres.stdproject'
+stdproject {
+	javadocGroup "Graphviz Graph Builder", "org.anarres.graphviz.builder"
+}
+
+subprojects {
+	group = "org.anarres.graphviz"
+
+	apply plugin: 'org.anarres.stdmodule'
+	stdmodule {
+		description "GraphViz graph builder and parser."
+		author id: 'shevek', name: 'Shevek', email: 'github@anarres.org'
+		license 'Apache-2.0'
+	}
+
+	dependencies {
+		compile 'com.google.code.findbugs:annotations:2.0.3'
+		compile 'org.slf4j:slf4j-api:1.7.12'
+	}
+
+	sourceCompatibility = 1.6
+	animalsniffer {
+		signature = "org.codehaus.mojo.signature:java16:+@signature"
+	}
+}
+
+project(':graphviz-builder') {
+	dependencies {
+		compile 'com.google.guava:guava:18.0'
+		// compile 'org.codehaus.mojo:animal-sniffer-annotations:1.14'
+		// compile 'dnsjava:dnsjava:2.1.1'
+	}
+}
+
+project(':graphviz-parser') {
+	apply plugin: 'sablecc'
+
+	dependencies {
+		compile 'com.google.guava:guava:18.0'
+	}
+}

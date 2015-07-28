@@ -1,0 +1,192 @@
+Package org.anarres.graphviz.parser;
+
+Helpers
+
+	all = [0 .. 0xFFFF];
+
+	tab = 0x0009;
+	lf  = 0x000a;
+	ff  = 0x000c;
+	cr  = 0x000d;
+	sp  = ' ';
+	eol = lf | cr | cr lf; 
+	not_eol = [all - [cr + lf]];
+
+	not_star =    [all - '*'];
+	not_star_slash = [not_star - '/'];
+
+	/* 6.4.2.1 digit, nondigit */
+	digit = ['0' .. '9'];
+	nondigit = ['_' + [['a' .. 'z'] + ['A' ..  'Z']]];
+
+	/* 6.4.4.4 (various sequences) */
+	escape_seq = 
+		'\' ''' | '\"' | '\?' | '\\' | '\a' | '\b' | '\f' | '\n' |
+		'\r' | '\t' | '\v' | '\l' ;
+
+	/* 6.4.5 string sequences */
+	s_char = [all - ['"' + ['\' + [cr + lf]]]] | escape_seq;
+	s_char_seq = s_char+;
+
+Tokens
+
+	tok_lbrace = '{' ;
+	tok_rbrace = '}' ;
+	tok_lsquare = '[' ;
+	tok_rsquare = ']' ;
+	tok_arrow = '->' ;
+	tok_link = '--' ;
+	tok_eq = '=' ;
+	tok_semi = ';' ;
+	tok_comma = ',' ;
+	tok_colon = ':' ;
+
+	kw_strict = 'strict' ;
+	kw_graph = 'graph' ;
+	kw_digraph = 'digraph' ;
+	kw_subgraph = 'subgraph' ;
+
+	kw_node = 'node' ;
+	kw_edge = 'edge';
+
+	// We include dot to allow for nonintegers.
+	literal = (digit | nondigit | '.')*;
+
+	string_literal = '"' s_char_seq? '"';
+
+	blank = (eol | tab | ' ')+;
+	comment = 
+		('//' not_eol* eol?) |
+		('/*' not_star* '*'+ (not_star_slash not_star* '*'+)* '/') |
+		('#' not_eol* eol?) ;
+
+Ignored Tokens
+	blank, comment ;
+
+Productions
+
+	graph { -> graph } =
+		kw_strict? graph_type atom? graph_body
+			{ -> New graph(
+				graph_type,
+				atom,
+				[graph_body.statement]) } ;
+
+	graph_type { -> graph_type } =
+		{kw_graph} kw_graph
+			{ -> New graph_type.graph(kw_graph) } |
+		{kw_digraph} kw_digraph
+			{ -> New graph_type.digraph(kw_digraph) } ;
+
+	graph_body { -> statement* } =
+		tok_lbrace statement* tok_rbrace
+			{ -> [statement.statement] } ;
+
+	statement { -> statement } =
+		{global_defaults} attr_item tok_semi?
+			{ -> New statement.global_defaults() } |
+		{graph_defaults} kw_graph attr_list tok_semi?
+			{ -> New statement.graph_defaults() } |
+		{node_defaults} kw_node attr_list tok_semi?
+			{ -> New statement.node_defaults() } |
+		{edge_defaults} kw_edge attr_list tok_semi?
+			{ -> New statement.edge_defaults() } |
+		{data} composite tok_semi?
+			{ -> New statement.data() } ;
+
+	composite =
+		node_item node_suffix* attributes
+			{ -> New composite(
+				[node_item.node, node_suffix.node],
+				[attributes.attribute]) } ;
+
+	node_item { -> node } =
+		{simple} atom
+			{ -> New node.simple(atom) } |
+		{port} [name]:atom tok_colon [port]:atom
+			{ -> New node.port(name.atom, port.atom) } |
+		{subgraph} subgraph_name? graph_body
+			{ -> New node.subgraph(
+				subgraph_name.atom,
+				[graph_body.statement]) } ;
+
+	node_suffix { -> node } =
+		edge node_item
+			{ -> node_item.node } ;
+
+	edge =
+		{arrow} tok_arrow
+			{ -> New edge.arrow(tok_arrow) } |
+		{link} tok_link
+			{ -> New edge.link(tok_link) } ;
+			
+	subgraph_name { -> atom? } =
+		kw_subgraph atom?
+			{ -> atom } ;
+
+	// Multiple attribute lists: [a=b,c=d] [e=f;g=h]
+	attributes { -> attribute* } =
+		attr_list*
+			{ -> [attr_list.attribute] } ;
+
+	// A single attribute list: [a=b,c=d]
+	attr_list { -> attribute* } =
+		tok_lsquare attr_item* tok_rsquare
+			{ -> [attr_item.attribute] } ;
+
+	// A single attribute: a=b
+	attr_item { -> attribute } =
+		[key]:atom [value]:attr_value? attr_separator?
+			{ -> New attribute(key.atom, value.atom) } ;
+
+	attr_value { -> atom } =
+		tok_eq [value]:atom
+			{ -> value } ;
+
+	attr_separator { -> } =
+		{semi} tok_semi { -> } |
+		{comma} tok_comma { -> } ;
+
+	// An atomic label: foo, "bar", 42
+	atom =
+		{literal} literal
+			{ -> New atom.literal(literal) } |
+		{quoted} string_literal
+			{ -> New atom.quoted(string_literal) } ;
+
+Abstract Syntax Tree
+
+	graph = 
+		graph_type
+		[name]:atom?
+		statement* ;
+
+	graph_type =
+		{graph} kw_graph |
+		{digraph} kw_digraph ;
+
+	statement =
+		{global_defaults} |
+		{graph_defaults} |
+		{node_defaults} |
+		{edge_defaults} |
+		{data} ;
+
+	composite =
+		node* attribute* ;
+
+	node =
+		{simple} [name]:atom |
+		{port} [name]:atom [port]:atom |
+		{subgraph} [name]:atom? statement* ;
+
+	edge =
+		{arrow} tok_arrow |
+		{link} tok_link ;
+
+	attribute =
+		[key]:atom [value]:atom? ;
+
+	atom =
+		{literal} literal |
+		{quoted} string_literal ;
