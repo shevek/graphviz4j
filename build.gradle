@@ -27,6 +27,10 @@ subprojects {
 	animalsniffer {
 		signature = "org.codehaus.mojo.signature:java16:+@signature"
 	}
+
+	findbugs {
+		excludeFilter = file("$rootProject.projectDir/gradle/filter.xml")
+	}
 }
 
 project(':graphviz-builder') {

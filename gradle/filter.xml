@@ -1,0 +1,13 @@
+<FindBugsFilter>
+
+	<Match><Package name="org.anarres.graphviz.parser.lexer" /></Match>
+	<Match><Package name="org.anarres.graphviz.parser.parser" /></Match>
+	<Match><Package name="org.anarres.graphviz.parser.node" /></Match>
+
+	<!-- Abstract class empty method. -->
+	<Match><Bug code="ACEM" /></Match>
+
+	<!-- Exception softening. -->
+	<Match><Bug code="EXS" /></Match>
+
+</FindBugsFilter>
