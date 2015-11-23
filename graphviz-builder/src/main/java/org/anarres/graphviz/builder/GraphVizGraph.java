@@ -4,6 +4,7 @@
  */
 package org.anarres.graphviz.builder;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Charsets;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
@@ -18,10 +19,13 @@ import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -41,6 +45,7 @@ public class GraphVizGraph {
     @CheckForNull
     private GraphVizLabel label;
     private final Predicate<? super GraphVizScope> scopes;
+    private transient final Set<String> comments = new HashSet<String>();
     private transient final Map<GraphVizNode.Key, GraphVizNode> nodes = new HashMap<GraphVizNode.Key, GraphVizNode>();
     private transient final Map<GraphVizEdge.Key, GraphVizEdge> edges = new HashMap<GraphVizEdge.Key, GraphVizEdge>();
     private transient final Map<GraphVizCluster.Key, GraphVizCluster> clusters = new HashMap<GraphVizCluster.Key, GraphVizCluster>();
@@ -73,6 +78,17 @@ public class GraphVizGraph {
     @SuppressWarnings("unchecked")
     public GraphVizGraph label(@Nonnull CharSequence csq) {
         label().set(csq);
+        return this;
+    }
+
+    @Nonnull
+    public Collection<? extends String> getComments() {
+        return comments;
+    }
+
+    @Nonnull
+    public GraphVizGraph comment(String text) {
+        comments.add(text);
         return this;
     }
 
@@ -202,6 +218,25 @@ public class GraphVizGraph {
             writer.write('\t');
     }
 
+    private final CharMatcher NEWLINE = CharMatcher.is('\n');
+
+    private void writeComments(@Nonnull Writer writer, @Nonnull Iterable<? extends String> comments, int indent) throws IOException {
+        StringBuilder buf = new StringBuilder();
+        for (int i = 0; i < indent; i++)
+            buf.append("\t");
+        buf.append("// ");
+        String prefix = buf.toString();
+
+        // This is what is called "premature optimization".
+        for (String comment : comments) {
+            writer.write(prefix);
+            if (NEWLINE.matchesAnyOf(comment))
+                comment = NEWLINE.replaceFrom(comment, "\n" + prefix);
+            writer.write(comment);
+            writer.write('\n');
+        }
+    }
+
     private void writeTo(
             @Nonnull Writer writer,
             @Nonnull Map<? extends GraphVizCluster, ? extends Iterable<? extends GraphVizCluster>> clusterMap,
@@ -211,6 +246,7 @@ public class GraphVizGraph {
         if (_clusters == null)
             return;
         for (GraphVizCluster cluster : _clusters) {
+            writeComments(writer, cluster.getComments(), depth + 1);
             writeIndent(writer, depth);
             writer.append("\tsubgraph ").append(cluster.getId()).append(" {\n");
             writeIndent(writer, depth);
@@ -258,6 +294,7 @@ public class GraphVizGraph {
         // else if (out instanceof StringBuilderWriter) writer = out;
         else
             writer = new BufferedWriter(out);
+        writeComments(writer, comments, 0);
         writer.write("digraph G {\n");
         writer.write("\tcompound=true;\n");
         // writer.write("\tranksep=1.5;\n");
@@ -269,6 +306,7 @@ public class GraphVizGraph {
         }
 
         for (GraphVizNode node : nodes.values()) {
+            writeComments(writer, node.getComments(), 1);
             writer.append("\t").append(node.getId()).append(" [");
             boolean first = true;
             first = append(writer, "color", node.getColor(), true, first);
@@ -282,6 +320,7 @@ public class GraphVizGraph {
             // GraphVizEdge.Key key = e.getKey();
             GraphVizEdge edge = e.getValue();
 
+            writeComments(writer, edge.getComments(), 1);
             writer.append("\t").append(edge.getSourceId()).append(" -> ").append(edge.getTargetId()).append(" [");
             boolean first = true;
             first = append(writer, "color", edge.getColor(), true, first);

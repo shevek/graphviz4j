@@ -4,6 +4,9 @@
  */
 package org.anarres.graphviz.builder;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
@@ -15,6 +18,7 @@ public abstract class GraphVizElement<T extends GraphVizElement<?>> {
 
     @Nonnull
     private final GraphVizGraph graph;
+    private final Set<String> comments = new HashSet<String>();
     @CheckForNull
     private GraphVizLabel label;
     @CheckForNull
@@ -26,8 +30,21 @@ public abstract class GraphVizElement<T extends GraphVizElement<?>> {
         this.graph = graph;
     }
 
+    @Nonnull
     public GraphVizGraph getGraph() {
         return graph;
+    }
+
+    @Nonnull
+    public Collection<? extends String> getComments() {
+        return comments;
+    }
+
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    public T comment(String text) {
+        comments.add(text);
+        return (T) this;
     }
 
     @CheckForNull

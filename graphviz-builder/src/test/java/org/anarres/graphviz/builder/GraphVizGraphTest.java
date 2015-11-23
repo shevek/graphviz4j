@@ -24,10 +24,11 @@ public class GraphVizGraphTest implements GraphVizScope {
         assertNotNull(graph.node(this, "foo"));
         assertSame(graph.node(this, "foo"), graph.node(this, "foo"));
         graph.node(this, "foo").label("something");
-        graph.node(this, "bar").label("something");
+        graph.node(this, "bar").label("something").comment("multi\nline\nnode comment");
         graph.edge(this, "bar", "foo");
-        graph.edge(this, "foo", "bar").label("Some label");
+        graph.edge(this, "foo", "bar").label("Some label").comment("multi\nline\nedge comment\n\n");
 
+        graph.comment("This is my\nmultiline comment.");
         graph.label("This is my graph\ntitle");
 
         graph.cluster(this, "foo").label("My cluster").add(this, "foo");
@@ -35,7 +36,7 @@ public class GraphVizGraphTest implements GraphVizScope {
         {
             StringWriter writer = new StringWriter();
             graph.writeTo(writer);
-            LOG.info("Graph is " + writer);
+            LOG.info("Graph is:\n" + writer);
         }
 
         {
