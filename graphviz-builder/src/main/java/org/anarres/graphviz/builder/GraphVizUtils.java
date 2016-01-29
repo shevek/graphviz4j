@@ -8,6 +8,7 @@ package org.anarres.graphviz.builder;
 import com.google.common.base.Preconditions;
 import java.io.File;
 import java.io.IOException;
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 /**
@@ -16,6 +17,18 @@ import javax.annotation.Nonnull;
  * @author shevek
  */
 public class GraphVizUtils {
+
+    /* pp */ static int hashCode(@CheckForNull Object o) {
+        return o == null ? 0 : o.hashCode();
+    }
+
+    /* pp */ static boolean equals(@CheckForNull Object a, @CheckForNull Object b) {
+        if (a == b)
+            return true;
+        if (a == null)
+            return false;
+        return a.equals(b);
+    }
 
     /**
      * This supports a one-liner: GraphVizUtils.toGraphVizGraph(object).writeTo(new File(...)).

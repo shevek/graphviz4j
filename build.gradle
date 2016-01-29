@@ -37,7 +37,7 @@ project(':graphviz-builder') {
 	dependencies {
 		compile 'com.google.guava:guava:18.0'
 		// compile 'org.codehaus.mojo:animal-sniffer-annotations:1.14'
-		// compile 'dnsjava:dnsjava:2.1.1'
+		// compile 'org.jgrapht:jgrapht-core:0.9.1'
 	}
 }
 

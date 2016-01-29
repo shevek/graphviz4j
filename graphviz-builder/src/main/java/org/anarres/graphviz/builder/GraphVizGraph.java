@@ -29,7 +29,6 @@ import java.util.Set;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-// import org.apache.commons.io.output.StringBuilderWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,6 +120,11 @@ public class GraphVizGraph {
     }
 
     @Nonnull
+    public Collection<? extends GraphVizNode> getNodes() {
+        return nodes.values();
+    }
+
+    @Nonnull
     public GraphVizNode node(@Nonnull GraphVizScope scope, @Nonnull Object object) {
         GraphVizNode.Key key = new GraphVizNode.Key(scope, object);
         if (!isScopeVisible(scope))
@@ -141,8 +145,13 @@ public class GraphVizGraph {
     }
 
     @Nonnull
-    public GraphVizEdge edge(@Nonnull GraphVizObject<?> source, @Nonnull GraphVizObject<?> target) {
-        GraphVizEdge.Key key = new GraphVizEdge.Key(source.getKey(), target.getKey());
+    public Collection<? extends GraphVizEdge> getEdges() {
+        return edges.values();
+    }
+
+    @Nonnull
+    public GraphVizEdge edge(@Nonnull GraphVizObject<?> source, @Nonnull GraphVizObject<?> target, @CheckForNull Object edgeId) {
+        GraphVizEdge.Key key = new GraphVizEdge.Key(source.getKey(), target.getKey(), edgeId);
         if (!isScopeVisible(source.getScope()))
             return new GraphVizEdge(this, key, "", "");
         if (!isScopeVisible(target.getScope()))
@@ -160,20 +169,33 @@ public class GraphVizGraph {
     }
 
     @Nonnull
+    public GraphVizEdge edge(@Nonnull GraphVizObject<?> source, @Nonnull GraphVizObject<?> target) {
+        return edge(source, target, null);
+    }
+
+    @Nonnull
     public GraphVizEdge edge(@Nonnull GraphVizScope scope, @Nonnull Object source, @Nonnull Object target) {
         return edge(node(scope, source), node(scope, target));
     }
 
+    public boolean containsEdge(@Nonnull GraphVizObject<?> source, @Nonnull GraphVizObject<?> target, @CheckForNull Object edgeId) {
+        GraphVizEdge.Key key = new GraphVizEdge.Key(source.getKey(), target.getKey(), edgeId);
+        return edges.containsKey(key);
+    }
+
     public boolean containsEdge(@Nonnull GraphVizObject<?> source, @Nonnull GraphVizObject<?> target) {
-        GraphVizEdge.Key key = new GraphVizEdge.Key(source.getKey(), target.getKey());
+        return containsEdge(source, target, null);
+    }
+
+    public boolean containsEdge(@Nonnull GraphVizScope scope, @Nonnull Object source, @Nonnull Object target, @CheckForNull Object edgeId) {
+        GraphVizObject.Key k_source = new GraphVizObject.Key(scope, source);
+        GraphVizObject.Key k_target = new GraphVizObject.Key(scope, target);
+        GraphVizEdge.Key key = new GraphVizEdge.Key(k_source, k_target, edgeId);
         return edges.containsKey(key);
     }
 
     public boolean containsEdge(@Nonnull GraphVizScope scope, @Nonnull Object source, @Nonnull Object target) {
-        GraphVizObject.Key k_source = new GraphVizObject.Key(scope, source);
-        GraphVizObject.Key k_target = new GraphVizObject.Key(scope, target);
-        GraphVizEdge.Key key = new GraphVizEdge.Key(k_source, k_target);
-        return edges.containsKey(key);
+        return containsEdge(scope, source, target, null);
     }
 
     @Nonnull
@@ -291,7 +313,6 @@ public class GraphVizGraph {
             writer = out;
         else if (out instanceof StringWriter)
             writer = out;
-        // else if (out instanceof StringBuilderWriter) writer = out;
         else
             writer = new BufferedWriter(out);
         writeComments(writer, comments, 0);
@@ -367,20 +388,13 @@ public class GraphVizGraph {
         }
     }
 
-    /*
-     @Override
-     public String toString() {
-     StringBuilderWriter writer = new StringBuilderWriter();
-     try {
-     writeTo(writer);
-     } catch (IOException ex) {
-     PrintWriter pw = new PrintWriter(writer);
-     ex.printStackTrace(pw);
-     pw.close();
-     }
-     return writer.toString();
-     }
-     */
+    @Nonnull
+    public String writeToString() throws IOException {
+        StringWriter writer = new StringWriter();
+        writeTo(writer);
+        return writer.toString();
+    }
+
     @Override
     public String toString() {
         return "GraphVizGraph(" + nodes.size() + " nodes, " + edges.size() + " edges)";

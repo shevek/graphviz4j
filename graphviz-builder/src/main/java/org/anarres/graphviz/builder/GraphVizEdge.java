@@ -20,10 +20,13 @@ public class GraphVizEdge extends GraphVizElement<GraphVizEdge> {
         private final GraphVizObject.Key sourceKey;
         @Nonnull
         private final GraphVizObject.Key targetKey;
+        @CheckForNull
+        private final Object edgeId;
 
-        public Key(@Nonnull GraphVizObject.Key sourceKey, @Nonnull GraphVizObject.Key targetKey) {
+        public Key(@Nonnull GraphVizObject.Key sourceKey, @Nonnull GraphVizObject.Key targetKey, @CheckForNull Object edgeId) {
             this.sourceKey = Preconditions.checkNotNull(sourceKey, "Source key was null.");
             this.targetKey = Preconditions.checkNotNull(targetKey, "Target key was null.");
+            this.edgeId = edgeId;
         }
 
         @Nonnull
@@ -36,9 +39,14 @@ public class GraphVizEdge extends GraphVizElement<GraphVizEdge> {
             return targetKey;
         }
 
+        @CheckForNull
+        public Object getEdgeId() {
+            return edgeId;
+        }
+
         @Override
         public int hashCode() {
-            return getSourceKey().hashCode() ^ getTargetKey().hashCode();
+            return getSourceKey().hashCode() ^ getTargetKey().hashCode() ^ GraphVizUtils.hashCode(getEdgeId());
         }
 
         @Override
@@ -50,7 +58,9 @@ public class GraphVizEdge extends GraphVizElement<GraphVizEdge> {
             if (getClass() != obj.getClass())
                 return false;
             Key k = (Key) obj;
-            return getSourceKey().equals(k.getSourceKey()) && getTargetKey().equals(k.getTargetKey());
+            return getSourceKey().equals(k.getSourceKey())
+                    && getTargetKey().equals(k.getTargetKey())
+                    && GraphVizUtils.equals(getEdgeId(), k.getEdgeId());
         }
     }
     @Nonnull
