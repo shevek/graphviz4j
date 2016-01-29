@@ -149,6 +149,14 @@ public class GraphVizGraph {
         return edges.values();
     }
 
+    /**
+     * Ensures that this graph contains a given edge.
+     *
+     * @param source The source node of the edge.
+     * @param target The target node of the edge.
+     * @param edgeId An optional identifier for this edge, allowing for multigraphs.
+     * @return Either an existing, or a newly created edge.
+     */
     @Nonnull
     public GraphVizEdge edge(@Nonnull GraphVizObject<?> source, @Nonnull GraphVizObject<?> target, @CheckForNull Object edgeId) {
         GraphVizEdge.Key key = new GraphVizEdge.Key(source.getKey(), target.getKey(), edgeId);
