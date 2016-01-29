@@ -174,8 +174,13 @@ public class GraphVizGraph {
     }
 
     @Nonnull
+    public GraphVizEdge edge(@Nonnull GraphVizScope scope, @Nonnull Object source, @Nonnull Object target, Object edgeId) {
+        return edge(node(scope, source), node(scope, target), edgeId);
+    }
+
+    @Nonnull
     public GraphVizEdge edge(@Nonnull GraphVizScope scope, @Nonnull Object source, @Nonnull Object target) {
-        return edge(node(scope, source), node(scope, target));
+        return edge(scope, source, target, null);
     }
 
     public boolean containsEdge(@Nonnull GraphVizObject<?> source, @Nonnull GraphVizObject<?> target, @CheckForNull Object edgeId) {
