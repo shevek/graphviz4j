@@ -24,6 +24,7 @@ public abstract class GraphVizScopePredicate implements Predicate<GraphVizScope>
     }
 
     @Nonnull
+    @SafeVarargs
     public static GraphVizScopePredicate include(final Class<? extends GraphVizScope>... types) {
         return new GraphVizScopePredicate() {
             @Override
@@ -37,6 +38,7 @@ public abstract class GraphVizScopePredicate implements Predicate<GraphVizScope>
     }
 
     @Nonnull
+    @SafeVarargs
     public static GraphVizScopePredicate exclude(final Class<? extends GraphVizScope>... types) {
         return new GraphVizScopePredicate() {
             @Override
