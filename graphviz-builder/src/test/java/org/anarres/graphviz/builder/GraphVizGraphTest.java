@@ -23,6 +23,7 @@ public class GraphVizGraphTest implements GraphVizScope {
         GraphVizGraph graph = new GraphVizGraph();
         assertNotNull(graph.node(this, "foo"));
         assertSame(graph.node(this, "foo"), graph.node(this, "foo"));
+        graph.setGraphOption(GraphVizGraphOption.rankdir, "LR");
         graph.node(this, "foo").label("something");
         graph.node(this, "bar").label("something").comment("multi\nline\nnode comment");
         graph.edge(this, "bar", "foo");

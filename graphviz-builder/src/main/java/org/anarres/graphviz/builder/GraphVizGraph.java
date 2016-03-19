@@ -45,12 +45,14 @@ public class GraphVizGraph {
     private GraphVizLabel label;
     private final Predicate<? super GraphVizScope> scopes;
     private transient final Set<String> comments = new HashSet<String>();
+    private transient final Map<String, String> graphOptions = new HashMap<String, String>();
     private transient final Map<GraphVizNode.Key, GraphVizNode> nodes = new HashMap<GraphVizNode.Key, GraphVizNode>();
     private transient final Map<GraphVizEdge.Key, GraphVizEdge> edges = new HashMap<GraphVizEdge.Key, GraphVizEdge>();
     private transient final Map<GraphVizCluster.Key, GraphVizCluster> clusters = new HashMap<GraphVizCluster.Key, GraphVizCluster>();
 
     public GraphVizGraph(@Nonnull Predicate<? super GraphVizScope> scopes) {
         this.scopes = scopes;
+        graphOptions.put("compound", "true");
     }
 
     public GraphVizGraph() {
@@ -89,6 +91,22 @@ public class GraphVizGraph {
     public GraphVizGraph comment(String text) {
         comments.add(text);
         return this;
+    }
+
+    @Nonnull
+    public Map<? extends String, ? extends String> getGraphOptions() {
+        return graphOptions;
+    }
+
+    public void setGraphOption(@Nonnull String key, @CheckForNull String value) {
+        if (value == null)
+            graphOptions.remove(key);
+        else
+            graphOptions.put(key, value);
+    }
+
+    public void setGraphOption(@Nonnull GraphVizGraphOption key, @CheckForNull String value) {
+        setGraphOption(key.name(), value);
     }
 
     private void clear(@Nonnull GraphVizScope scope, @Nonnull Iterable<? extends GraphVizObject.Key> data) {
@@ -255,7 +273,7 @@ public class GraphVizGraph {
 
     private final CharMatcher NEWLINE = CharMatcher.is('\n');
 
-    private void writeComments(@Nonnull Writer writer, @Nonnull Iterable<? extends String> comments, int indent) throws IOException {
+    private void writeCommentsTo(@Nonnull Writer writer, @Nonnull Iterable<? extends String> comments, int indent) throws IOException {
         StringBuilder buf = new StringBuilder();
         for (int i = 0; i < indent; i++)
             buf.append("\t");
@@ -272,7 +290,7 @@ public class GraphVizGraph {
         }
     }
 
-    private void writeTo(
+    private void writeClustersTo(
             @Nonnull Writer writer,
             @Nonnull Map<? extends GraphVizCluster, ? extends Iterable<? extends GraphVizCluster>> clusterMap,
             @CheckForNull GraphVizCluster parent,
@@ -281,7 +299,7 @@ public class GraphVizGraph {
         if (_clusters == null)
             return;
         for (GraphVizCluster cluster : _clusters) {
-            writeComments(writer, cluster.getComments(), depth + 1);
+            writeCommentsTo(writer, cluster.getComments(), depth + 1);
             writeIndent(writer, depth);
             writer.append("\tsubgraph ").append(cluster.getId()).append(" {\n");
             writeIndent(writer, depth);
@@ -297,7 +315,7 @@ public class GraphVizGraph {
                 writeIndent(writer, depth);
                 writer.append("\t\t").append(node.getId()).append(";\n");
             }
-            writeTo(writer, clusterMap, cluster, depth + 1);
+            writeClustersTo(writer, clusterMap, cluster, depth + 1);
             writeIndent(writer, depth);
             writer.append("\t}\n");
         }
@@ -328,11 +346,18 @@ public class GraphVizGraph {
             writer = out;
         else
             writer = new BufferedWriter(out);
-        writeComments(writer, comments, 0);
+        writeCommentsTo(writer, comments, 0);
         writer.write("digraph G {\n");
-        writer.write("\tcompound=true;\n");
+        // writer.write("\tcompound=true;\n");
         // writer.write("\tranksep=1.5;\n");
         writer.write("\tnode [shape=box];\n");
+        for (Map.Entry<String, String> e : graphOptions.entrySet()) {
+            writer.write("\t");
+            writer.write(e.getKey());
+            writer.write("=");
+            writer.write(e.getValue());
+            writer.write(";\n");
+        }
         if (getLabel() != null) {
             writer.append("\t");
             append(writer, "label", getLabel(), true, true);
@@ -340,7 +365,7 @@ public class GraphVizGraph {
         }
 
         for (GraphVizNode node : nodes.values()) {
-            writeComments(writer, node.getComments(), 1);
+            writeCommentsTo(writer, node.getComments(), 1);
             writer.append("\t").append(node.getId()).append(" [");
             boolean first = true;
             first = append(writer, "color", node.getColor(), true, first);
@@ -354,7 +379,7 @@ public class GraphVizGraph {
             // GraphVizEdge.Key key = e.getKey();
             GraphVizEdge edge = e.getValue();
 
-            writeComments(writer, edge.getComments(), 1);
+            writeCommentsTo(writer, edge.getComments(), 1);
             writer.append("\t").append(edge.getSourceId()).append(" -> ").append(edge.getTargetId()).append(" [");
             boolean first = true;
             first = append(writer, "color", edge.getColor(), true, first);
@@ -382,7 +407,7 @@ public class GraphVizGraph {
          }
          */
         Map<GraphVizCluster, List<GraphVizCluster>> clusterMap = newClusterMap();
-        writeTo(writer, clusterMap, null, 0);
+        writeClustersTo(writer, clusterMap, null, 0);
         writer.write("}\n");
         writer.flush();
     }
