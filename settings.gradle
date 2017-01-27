@@ -1,2 +1,4 @@
 rootProject.name='graphviz4j'
-include 'graphviz-builder', 'graphviz-parser'
+include 'graphviz-builder',
+	'graphviz-builder-jgrapht',
+	'graphviz-parser'

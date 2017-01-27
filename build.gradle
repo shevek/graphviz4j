@@ -41,6 +41,17 @@ project(':graphviz-builder') {
 	}
 }
 
+project(':graphviz-builder-jgrapht') {
+	dependencies {
+		compile project(':graphviz-builder')
+		compile 'org.jgrapht:jgrapht-core:1.0.0'
+	}
+
+	animalsniffer {
+		skip = true
+	}
+}
+
 project(':graphviz-parser') {
 	apply plugin: 'sablecc'
 
