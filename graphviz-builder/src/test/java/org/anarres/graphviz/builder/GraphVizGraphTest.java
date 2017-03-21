@@ -24,7 +24,7 @@ public class GraphVizGraphTest implements GraphVizScope {
         assertNotNull(graph.node(this, "foo"));
         assertSame(graph.node(this, "foo"), graph.node(this, "foo"));
         graph.setGraphOption(GraphVizGraphOption.rankdir, "LR");
-        graph.node(this, "foo").label("something");
+        graph.node(this, "foo").label("something").style("dotted");
         graph.node(this, "bar").label("something").comment("multi\nline\nnode comment");
         graph.edge(this, "bar", "foo");
         graph.edge(this, "foo", "bar").label("Some label").comment("multi\nline\nedge comment\n\n");

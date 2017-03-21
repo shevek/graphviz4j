@@ -368,22 +368,24 @@ public class GraphVizGraph {
             writeCommentsTo(writer, node.getComments(), 1);
             writer.append("\t").append(node.getId()).append(" [");
             boolean first = true;
-            first = append(writer, "color", node.getColor(), true, first);
-            first = append(writer, "style", node.getStyle(), true, first);
-            first = append(writer, "shape", node.getShape(), true, first);
+            // first = append(writer, "color", node.getColor(), true, first);
+            // first = append(writer, "style", node.getStyle(), true, first);
+            // first = append(writer, "shape", node.getShape(), true, first);
             first = append(writer, "label", node.getLabel(), true, first);
+            for (Map.Entry<? extends String, ? extends String> e : node.getAttributes().entrySet())
+                first = append(writer, e.getKey(), e.getValue(), true, first);
             writer.append("];\n");
         }
 
-        for (Map.Entry<GraphVizEdge.Key, GraphVizEdge> e : edges.entrySet()) {
-            // GraphVizEdge.Key key = e.getKey();
-            GraphVizEdge edge = e.getValue();
+        for (Map.Entry<GraphVizEdge.Key, GraphVizEdge> ee : edges.entrySet()) {
+            // GraphVizEdge.Key key = ee.getKey();
+            GraphVizEdge edge = ee.getValue();
 
             writeCommentsTo(writer, edge.getComments(), 1);
             writer.append("\t").append(edge.getSourceId()).append(" -> ").append(edge.getTargetId()).append(" [");
             boolean first = true;
-            first = append(writer, "color", edge.getColor(), true, first);
-            first = append(writer, "style", edge.getStyle(), true, first);
+            // first = append(writer, "color", edge.getColor(), true, first);
+            // first = append(writer, "style", edge.getStyle(), true, first);
             first = append(writer, "arrowhead", edge.getHeadShape(), true, first);
             first = append(writer, "arrowtail", edge.getTailShape(), true, first);
             first = append(writer, "label", edge.getLabel(), true, first);
@@ -391,6 +393,8 @@ public class GraphVizGraph {
             first = append(writer, "taillabel", edge.getTailLabel(), true, first);
             first = append(writer, "lhead", edge.getLogicalHead(), false, first);
             first = append(writer, "ltail", edge.getLogicalTail(), false, first);
+            for (Map.Entry<? extends String, ? extends String> e : edge.getAttributes().entrySet())
+                first = append(writer, e.getKey(), e.getValue(), true, first);
             writer.append("];\n");
         }
 

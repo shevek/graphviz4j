@@ -6,6 +6,8 @@ package org.anarres.graphviz.builder;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -16,15 +18,16 @@ import javax.annotation.Nonnull;
  */
 public abstract class GraphVizElement<T extends GraphVizElement<?>> {
 
+    public static final String ATTR_COLOR = "color";
+    public static final String ATTR_STYLE = "style";
+
     @Nonnull
     private final GraphVizGraph graph;
     private final Set<String> comments = new HashSet<String>();
     @CheckForNull
     private GraphVizLabel label;
-    @CheckForNull
-    private String color;
-    @CheckForNull
-    private String style;
+    @Nonnull
+    private final Map<String, String> attributes = new LinkedHashMap<String, String>();
 
     /* pp */ GraphVizElement(@Nonnull GraphVizGraph graph) {
         this.graph = graph;
@@ -66,27 +69,48 @@ public abstract class GraphVizElement<T extends GraphVizElement<?>> {
         return (T) this;
     }
 
+    @Nonnull
+    public Map<? extends String, ? extends String> getAttributes() {
+        return attributes;
+    }
+
+    @CheckForNull
+    public String getAttribute(@Nonnull String name) {
+        return attributes.get(name);
+    }
+
+    public void setAttribute(@Nonnull String name, @CheckForNull String value) {
+        if (value == null)
+            attributes.remove(name);
+        else
+            attributes.put(name, value);
+    }
+
+    @Nonnull
+    public T attr(@Nonnull String name, @CheckForNull String value) {
+        setAttribute(name, value);
+        return (T) this;
+    }
+
     @CheckForNull
     public String getColor() {
-        return color;
+        return getAttribute(ATTR_COLOR);
     }
 
     @Nonnull
     @SuppressWarnings("unchecked")
     public T color(@Nonnull String color) {
-        this.color = color;
-        return (T) this;
+        return attr(ATTR_COLOR, color);
     }
 
     @CheckForNull
     public String getStyle() {
-        return style;
+        return getAttribute(ATTR_STYLE);
     }
 
     @Nonnull
     @SuppressWarnings("unchecked")
     public T style(@Nonnull String style) {
-        this.style = style;
-        return (T) this;
+        return attr(ATTR_STYLE, style);
     }
 }
