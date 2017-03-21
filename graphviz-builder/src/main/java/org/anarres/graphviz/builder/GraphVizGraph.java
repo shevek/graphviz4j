@@ -310,6 +310,8 @@ public class GraphVizGraph {
                 writeIndent(writer, depth);
                 writer.append("\t\t").append("label=\"").append(String.valueOf(cluster.getLabel())).append("\";\n");
             }
+            for (Map.Entry<? extends String, ? extends String> e : cluster.getAttributes().entrySet())
+                writer.append("\t\t").append(e.getKey()).append("=\"").append(String.valueOf(e.getValue())).append("\";\n");
             for (GraphVizNode.Key key : cluster.getNodeKeys()) {
                 GraphVizNode node = node(key.getScope(), key.getObject());
                 writeIndent(writer, depth);

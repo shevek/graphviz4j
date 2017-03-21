@@ -32,7 +32,7 @@ public class GraphVizGraphTest implements GraphVizScope {
         graph.comment("This is my\nmultiline comment.");
         graph.label("This is my graph\ntitle");
 
-        graph.cluster(this, "foo").label("My cluster").add(this, "foo");
+        graph.cluster(this, "foo").label("My cluster").add(this, "foo").style("dotted");
 
         {
             StringWriter writer = new StringWriter();
