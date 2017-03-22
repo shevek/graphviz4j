@@ -21,8 +21,8 @@
 <span class="sourceLineNo">013</span> */<a name="line.13"></a>
 <span class="sourceLineNo">014</span>public class GraphVizNode extends GraphVizObject&lt;GraphVizNode&gt; {<a name="line.14"></a>
 <span class="sourceLineNo">015</span><a name="line.15"></a>
-<span class="sourceLineNo">016</span>    @CheckForNull<a name="line.16"></a>
-<span class="sourceLineNo">017</span>    private String shape;<a name="line.17"></a>
+<span class="sourceLineNo">016</span>    public static final String ATTR_SHAPE = "shape";<a name="line.16"></a>
+<span class="sourceLineNo">017</span>    public static final String ATTR_HREF = "href";<a name="line.17"></a>
 <span class="sourceLineNo">018</span><a name="line.18"></a>
 <span class="sourceLineNo">019</span>    /* pp */ GraphVizNode(@Nonnull GraphVizGraph graph, @Nonnull Key key, int id) {<a name="line.19"></a>
 <span class="sourceLineNo">020</span>        super(graph, key, "n" + id);<a name="line.20"></a>
@@ -30,15 +30,24 @@
 <span class="sourceLineNo">022</span><a name="line.22"></a>
 <span class="sourceLineNo">023</span>    @CheckForNull<a name="line.23"></a>
 <span class="sourceLineNo">024</span>    public String getShape() {<a name="line.24"></a>
-<span class="sourceLineNo">025</span>        return shape;<a name="line.25"></a>
+<span class="sourceLineNo">025</span>        return getAttribute(ATTR_SHAPE);<a name="line.25"></a>
 <span class="sourceLineNo">026</span>    }<a name="line.26"></a>
 <span class="sourceLineNo">027</span><a name="line.27"></a>
 <span class="sourceLineNo">028</span>    @Nonnull<a name="line.28"></a>
 <span class="sourceLineNo">029</span>    public GraphVizNode shape(@CheckForNull String shape) {<a name="line.29"></a>
-<span class="sourceLineNo">030</span>        this.shape = shape;<a name="line.30"></a>
-<span class="sourceLineNo">031</span>        return this;<a name="line.31"></a>
-<span class="sourceLineNo">032</span>    }<a name="line.32"></a>
-<span class="sourceLineNo">033</span>}<a name="line.33"></a>
+<span class="sourceLineNo">030</span>        return attr(ATTR_SHAPE, shape);<a name="line.30"></a>
+<span class="sourceLineNo">031</span>    }<a name="line.31"></a>
+<span class="sourceLineNo">032</span><a name="line.32"></a>
+<span class="sourceLineNo">033</span>    @CheckForNull<a name="line.33"></a>
+<span class="sourceLineNo">034</span>    public String getHref() {<a name="line.34"></a>
+<span class="sourceLineNo">035</span>        return getAttribute(ATTR_HREF);<a name="line.35"></a>
+<span class="sourceLineNo">036</span>    }<a name="line.36"></a>
+<span class="sourceLineNo">037</span><a name="line.37"></a>
+<span class="sourceLineNo">038</span>    @Nonnull<a name="line.38"></a>
+<span class="sourceLineNo">039</span>    public GraphVizNode href(@CheckForNull String href) {<a name="line.39"></a>
+<span class="sourceLineNo">040</span>        return attr(ATTR_HREF, href);<a name="line.40"></a>
+<span class="sourceLineNo">041</span>    }<a name="line.41"></a>
+<span class="sourceLineNo">042</span>}<a name="line.42"></a>
 
 
 

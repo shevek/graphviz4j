@@ -1,4 +1,5 @@
 org.anarres.graphviz.builder
+org.anarres.graphviz.builder.jgrapht
 org.anarres.graphviz.parser.analysis
 org.anarres.graphviz.parser.lexer
 org.anarres.graphviz.parser.node

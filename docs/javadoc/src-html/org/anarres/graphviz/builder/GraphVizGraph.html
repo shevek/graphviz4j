@@ -318,134 +318,140 @@
 <span class="sourceLineNo">310</span>                writeIndent(writer, depth);<a name="line.310"></a>
 <span class="sourceLineNo">311</span>                writer.append("\t\t").append("label=\"").append(String.valueOf(cluster.getLabel())).append("\";\n");<a name="line.311"></a>
 <span class="sourceLineNo">312</span>            }<a name="line.312"></a>
-<span class="sourceLineNo">313</span>            for (GraphVizNode.Key key : cluster.getNodeKeys()) {<a name="line.313"></a>
-<span class="sourceLineNo">314</span>                GraphVizNode node = node(key.getScope(), key.getObject());<a name="line.314"></a>
-<span class="sourceLineNo">315</span>                writeIndent(writer, depth);<a name="line.315"></a>
-<span class="sourceLineNo">316</span>                writer.append("\t\t").append(node.getId()).append(";\n");<a name="line.316"></a>
-<span class="sourceLineNo">317</span>            }<a name="line.317"></a>
-<span class="sourceLineNo">318</span>            writeClustersTo(writer, clusterMap, cluster, depth + 1);<a name="line.318"></a>
-<span class="sourceLineNo">319</span>            writeIndent(writer, depth);<a name="line.319"></a>
-<span class="sourceLineNo">320</span>            writer.append("\t}\n");<a name="line.320"></a>
-<span class="sourceLineNo">321</span>        }<a name="line.321"></a>
-<span class="sourceLineNo">322</span>    }<a name="line.322"></a>
-<span class="sourceLineNo">323</span><a name="line.323"></a>
-<span class="sourceLineNo">324</span>    /** This map allows null keys, and the null key should be present. */<a name="line.324"></a>
-<span class="sourceLineNo">325</span>    @Nonnull<a name="line.325"></a>
-<span class="sourceLineNo">326</span>    private Map&lt;GraphVizCluster, List&lt;GraphVizCluster&gt;&gt; newClusterMap() {<a name="line.326"></a>
-<span class="sourceLineNo">327</span>        Map&lt;GraphVizCluster, List&lt;GraphVizCluster&gt;&gt; clusterMap = new HashMap&lt;GraphVizCluster, List&lt;GraphVizCluster&gt;&gt;();<a name="line.327"></a>
-<span class="sourceLineNo">328</span>        for (GraphVizCluster child : clusters.values()) {<a name="line.328"></a>
-<span class="sourceLineNo">329</span>            @CheckForNull<a name="line.329"></a>
-<span class="sourceLineNo">330</span>            GraphVizCluster parent = child.getParent();<a name="line.330"></a>
-<span class="sourceLineNo">331</span>            List&lt;GraphVizCluster&gt; children = clusterMap.get(parent);<a name="line.331"></a>
-<span class="sourceLineNo">332</span>            if (children == null) {<a name="line.332"></a>
-<span class="sourceLineNo">333</span>                children = new ArrayList&lt;GraphVizCluster&gt;();<a name="line.333"></a>
-<span class="sourceLineNo">334</span>                clusterMap.put(parent, children);<a name="line.334"></a>
-<span class="sourceLineNo">335</span>            }<a name="line.335"></a>
-<span class="sourceLineNo">336</span>            children.add(child);<a name="line.336"></a>
-<span class="sourceLineNo">337</span>        }<a name="line.337"></a>
-<span class="sourceLineNo">338</span>        return clusterMap;<a name="line.338"></a>
-<span class="sourceLineNo">339</span>    }<a name="line.339"></a>
-<span class="sourceLineNo">340</span><a name="line.340"></a>
-<span class="sourceLineNo">341</span>    public void writeTo(@Nonnull Writer out) throws IOException {<a name="line.341"></a>
-<span class="sourceLineNo">342</span>        Writer writer;<a name="line.342"></a>
-<span class="sourceLineNo">343</span>        if (out instanceof BufferedWriter)<a name="line.343"></a>
-<span class="sourceLineNo">344</span>            writer = out;<a name="line.344"></a>
-<span class="sourceLineNo">345</span>        else if (out instanceof StringWriter)<a name="line.345"></a>
+<span class="sourceLineNo">313</span>            for (Map.Entry&lt;? extends String, ? extends String&gt; e : cluster.getAttributes().entrySet())<a name="line.313"></a>
+<span class="sourceLineNo">314</span>                writer.append("\t\t").append(e.getKey()).append("=\"").append(String.valueOf(e.getValue())).append("\";\n");<a name="line.314"></a>
+<span class="sourceLineNo">315</span>            for (GraphVizNode.Key key : cluster.getNodeKeys()) {<a name="line.315"></a>
+<span class="sourceLineNo">316</span>                GraphVizNode node = node(key.getScope(), key.getObject());<a name="line.316"></a>
+<span class="sourceLineNo">317</span>                writeIndent(writer, depth);<a name="line.317"></a>
+<span class="sourceLineNo">318</span>                writer.append("\t\t").append(node.getId()).append(";\n");<a name="line.318"></a>
+<span class="sourceLineNo">319</span>            }<a name="line.319"></a>
+<span class="sourceLineNo">320</span>            writeClustersTo(writer, clusterMap, cluster, depth + 1);<a name="line.320"></a>
+<span class="sourceLineNo">321</span>            writeIndent(writer, depth);<a name="line.321"></a>
+<span class="sourceLineNo">322</span>            writer.append("\t}\n");<a name="line.322"></a>
+<span class="sourceLineNo">323</span>        }<a name="line.323"></a>
+<span class="sourceLineNo">324</span>    }<a name="line.324"></a>
+<span class="sourceLineNo">325</span><a name="line.325"></a>
+<span class="sourceLineNo">326</span>    /** This map allows null keys, and the null key should be present. */<a name="line.326"></a>
+<span class="sourceLineNo">327</span>    @Nonnull<a name="line.327"></a>
+<span class="sourceLineNo">328</span>    private Map&lt;GraphVizCluster, List&lt;GraphVizCluster&gt;&gt; newClusterMap() {<a name="line.328"></a>
+<span class="sourceLineNo">329</span>        Map&lt;GraphVizCluster, List&lt;GraphVizCluster&gt;&gt; clusterMap = new HashMap&lt;GraphVizCluster, List&lt;GraphVizCluster&gt;&gt;();<a name="line.329"></a>
+<span class="sourceLineNo">330</span>        for (GraphVizCluster child : clusters.values()) {<a name="line.330"></a>
+<span class="sourceLineNo">331</span>            @CheckForNull<a name="line.331"></a>
+<span class="sourceLineNo">332</span>            GraphVizCluster parent = child.getParent();<a name="line.332"></a>
+<span class="sourceLineNo">333</span>            List&lt;GraphVizCluster&gt; children = clusterMap.get(parent);<a name="line.333"></a>
+<span class="sourceLineNo">334</span>            if (children == null) {<a name="line.334"></a>
+<span class="sourceLineNo">335</span>                children = new ArrayList&lt;GraphVizCluster&gt;();<a name="line.335"></a>
+<span class="sourceLineNo">336</span>                clusterMap.put(parent, children);<a name="line.336"></a>
+<span class="sourceLineNo">337</span>            }<a name="line.337"></a>
+<span class="sourceLineNo">338</span>            children.add(child);<a name="line.338"></a>
+<span class="sourceLineNo">339</span>        }<a name="line.339"></a>
+<span class="sourceLineNo">340</span>        return clusterMap;<a name="line.340"></a>
+<span class="sourceLineNo">341</span>    }<a name="line.341"></a>
+<span class="sourceLineNo">342</span><a name="line.342"></a>
+<span class="sourceLineNo">343</span>    public void writeTo(@Nonnull Writer out) throws IOException {<a name="line.343"></a>
+<span class="sourceLineNo">344</span>        Writer writer;<a name="line.344"></a>
+<span class="sourceLineNo">345</span>        if (out instanceof BufferedWriter)<a name="line.345"></a>
 <span class="sourceLineNo">346</span>            writer = out;<a name="line.346"></a>
-<span class="sourceLineNo">347</span>        else<a name="line.347"></a>
-<span class="sourceLineNo">348</span>            writer = new BufferedWriter(out);<a name="line.348"></a>
-<span class="sourceLineNo">349</span>        writeCommentsTo(writer, comments, 0);<a name="line.349"></a>
-<span class="sourceLineNo">350</span>        writer.write("digraph G {\n");<a name="line.350"></a>
-<span class="sourceLineNo">351</span>        // writer.write("\tcompound=true;\n");<a name="line.351"></a>
-<span class="sourceLineNo">352</span>        // writer.write("\tranksep=1.5;\n");<a name="line.352"></a>
-<span class="sourceLineNo">353</span>        writer.write("\tnode [shape=box];\n");<a name="line.353"></a>
-<span class="sourceLineNo">354</span>        for (Map.Entry&lt;String, String&gt; e : graphOptions.entrySet()) {<a name="line.354"></a>
-<span class="sourceLineNo">355</span>            writer.write("\t");<a name="line.355"></a>
-<span class="sourceLineNo">356</span>            writer.write(e.getKey());<a name="line.356"></a>
-<span class="sourceLineNo">357</span>            writer.write("=");<a name="line.357"></a>
-<span class="sourceLineNo">358</span>            writer.write(e.getValue());<a name="line.358"></a>
-<span class="sourceLineNo">359</span>            writer.write(";\n");<a name="line.359"></a>
-<span class="sourceLineNo">360</span>        }<a name="line.360"></a>
-<span class="sourceLineNo">361</span>        if (getLabel() != null) {<a name="line.361"></a>
-<span class="sourceLineNo">362</span>            writer.append("\t");<a name="line.362"></a>
-<span class="sourceLineNo">363</span>            append(writer, "label", getLabel(), true, true);<a name="line.363"></a>
-<span class="sourceLineNo">364</span>            writer.append(";\n");<a name="line.364"></a>
-<span class="sourceLineNo">365</span>        }<a name="line.365"></a>
-<span class="sourceLineNo">366</span><a name="line.366"></a>
-<span class="sourceLineNo">367</span>        for (GraphVizNode node : nodes.values()) {<a name="line.367"></a>
-<span class="sourceLineNo">368</span>            writeCommentsTo(writer, node.getComments(), 1);<a name="line.368"></a>
-<span class="sourceLineNo">369</span>            writer.append("\t").append(node.getId()).append(" [");<a name="line.369"></a>
-<span class="sourceLineNo">370</span>            boolean first = true;<a name="line.370"></a>
-<span class="sourceLineNo">371</span>            first = append(writer, "color", node.getColor(), true, first);<a name="line.371"></a>
-<span class="sourceLineNo">372</span>            first = append(writer, "style", node.getStyle(), true, first);<a name="line.372"></a>
-<span class="sourceLineNo">373</span>            first = append(writer, "shape", node.getShape(), true, first);<a name="line.373"></a>
-<span class="sourceLineNo">374</span>            first = append(writer, "label", node.getLabel(), true, first);<a name="line.374"></a>
-<span class="sourceLineNo">375</span>            writer.append("];\n");<a name="line.375"></a>
-<span class="sourceLineNo">376</span>        }<a name="line.376"></a>
-<span class="sourceLineNo">377</span><a name="line.377"></a>
-<span class="sourceLineNo">378</span>        for (Map.Entry&lt;GraphVizEdge.Key, GraphVizEdge&gt; e : edges.entrySet()) {<a name="line.378"></a>
-<span class="sourceLineNo">379</span>            // GraphVizEdge.Key key = e.getKey();<a name="line.379"></a>
-<span class="sourceLineNo">380</span>            GraphVizEdge edge = e.getValue();<a name="line.380"></a>
+<span class="sourceLineNo">347</span>        else if (out instanceof StringWriter)<a name="line.347"></a>
+<span class="sourceLineNo">348</span>            writer = out;<a name="line.348"></a>
+<span class="sourceLineNo">349</span>        else<a name="line.349"></a>
+<span class="sourceLineNo">350</span>            writer = new BufferedWriter(out);<a name="line.350"></a>
+<span class="sourceLineNo">351</span>        writeCommentsTo(writer, comments, 0);<a name="line.351"></a>
+<span class="sourceLineNo">352</span>        writer.write("digraph G {\n");<a name="line.352"></a>
+<span class="sourceLineNo">353</span>        // writer.write("\tcompound=true;\n");<a name="line.353"></a>
+<span class="sourceLineNo">354</span>        // writer.write("\tranksep=1.5;\n");<a name="line.354"></a>
+<span class="sourceLineNo">355</span>        writer.write("\tnode [shape=box];\n");<a name="line.355"></a>
+<span class="sourceLineNo">356</span>        for (Map.Entry&lt;String, String&gt; e : graphOptions.entrySet()) {<a name="line.356"></a>
+<span class="sourceLineNo">357</span>            writer.write("\t");<a name="line.357"></a>
+<span class="sourceLineNo">358</span>            writer.write(e.getKey());<a name="line.358"></a>
+<span class="sourceLineNo">359</span>            writer.write("=");<a name="line.359"></a>
+<span class="sourceLineNo">360</span>            writer.write(e.getValue());<a name="line.360"></a>
+<span class="sourceLineNo">361</span>            writer.write(";\n");<a name="line.361"></a>
+<span class="sourceLineNo">362</span>        }<a name="line.362"></a>
+<span class="sourceLineNo">363</span>        if (getLabel() != null) {<a name="line.363"></a>
+<span class="sourceLineNo">364</span>            writer.append("\t");<a name="line.364"></a>
+<span class="sourceLineNo">365</span>            append(writer, "label", getLabel(), true, true);<a name="line.365"></a>
+<span class="sourceLineNo">366</span>            writer.append(";\n");<a name="line.366"></a>
+<span class="sourceLineNo">367</span>        }<a name="line.367"></a>
+<span class="sourceLineNo">368</span><a name="line.368"></a>
+<span class="sourceLineNo">369</span>        for (GraphVizNode node : nodes.values()) {<a name="line.369"></a>
+<span class="sourceLineNo">370</span>            writeCommentsTo(writer, node.getComments(), 1);<a name="line.370"></a>
+<span class="sourceLineNo">371</span>            writer.append("\t").append(node.getId()).append(" [");<a name="line.371"></a>
+<span class="sourceLineNo">372</span>            boolean first = true;<a name="line.372"></a>
+<span class="sourceLineNo">373</span>            // first = append(writer, "color", node.getColor(), true, first);<a name="line.373"></a>
+<span class="sourceLineNo">374</span>            // first = append(writer, "style", node.getStyle(), true, first);<a name="line.374"></a>
+<span class="sourceLineNo">375</span>            // first = append(writer, "shape", node.getShape(), true, first);<a name="line.375"></a>
+<span class="sourceLineNo">376</span>            first = append(writer, "label", node.getLabel(), true, first);<a name="line.376"></a>
+<span class="sourceLineNo">377</span>            for (Map.Entry&lt;? extends String, ? extends String&gt; e : node.getAttributes().entrySet())<a name="line.377"></a>
+<span class="sourceLineNo">378</span>                first = append(writer, e.getKey(), e.getValue(), true, first);<a name="line.378"></a>
+<span class="sourceLineNo">379</span>            writer.append("];\n");<a name="line.379"></a>
+<span class="sourceLineNo">380</span>        }<a name="line.380"></a>
 <span class="sourceLineNo">381</span><a name="line.381"></a>
-<span class="sourceLineNo">382</span>            writeCommentsTo(writer, edge.getComments(), 1);<a name="line.382"></a>
-<span class="sourceLineNo">383</span>            writer.append("\t").append(edge.getSourceId()).append(" -&gt; ").append(edge.getTargetId()).append(" [");<a name="line.383"></a>
-<span class="sourceLineNo">384</span>            boolean first = true;<a name="line.384"></a>
-<span class="sourceLineNo">385</span>            first = append(writer, "color", edge.getColor(), true, first);<a name="line.385"></a>
-<span class="sourceLineNo">386</span>            first = append(writer, "style", edge.getStyle(), true, first);<a name="line.386"></a>
-<span class="sourceLineNo">387</span>            first = append(writer, "arrowhead", edge.getHeadShape(), true, first);<a name="line.387"></a>
-<span class="sourceLineNo">388</span>            first = append(writer, "arrowtail", edge.getTailShape(), true, first);<a name="line.388"></a>
-<span class="sourceLineNo">389</span>            first = append(writer, "label", edge.getLabel(), true, first);<a name="line.389"></a>
-<span class="sourceLineNo">390</span>            first = append(writer, "headlabel", edge.getHeadLabel(), true, first);<a name="line.390"></a>
-<span class="sourceLineNo">391</span>            first = append(writer, "taillabel", edge.getTailLabel(), true, first);<a name="line.391"></a>
-<span class="sourceLineNo">392</span>            first = append(writer, "lhead", edge.getLogicalHead(), false, first);<a name="line.392"></a>
-<span class="sourceLineNo">393</span>            first = append(writer, "ltail", edge.getLogicalTail(), false, first);<a name="line.393"></a>
-<span class="sourceLineNo">394</span>            writer.append("];\n");<a name="line.394"></a>
-<span class="sourceLineNo">395</span>        }<a name="line.395"></a>
-<span class="sourceLineNo">396</span><a name="line.396"></a>
-<span class="sourceLineNo">397</span>        /*<a name="line.397"></a>
-<span class="sourceLineNo">398</span>         for (GraphVizCluster cluster : clusters.values()) {<a name="line.398"></a>
-<span class="sourceLineNo">399</span>         writer.append("\tsubgraph ").append(cluster.getId()).append(" {\n");<a name="line.399"></a>
-<span class="sourceLineNo">400</span>         if (cluster.getLabel() != null)<a name="line.400"></a>
-<span class="sourceLineNo">401</span>         writer.append("\t\t").append("label=\"").append(String.valueOf(cluster.getLabel())).append("\";\n");<a name="line.401"></a>
-<span class="sourceLineNo">402</span>         for (GraphVizNode.Key key : cluster.getNodeKeys()) {<a name="line.402"></a>
-<span class="sourceLineNo">403</span>         GraphVizNode node = node(key.getScope(), key.getObject());<a name="line.403"></a>
-<span class="sourceLineNo">404</span>         writer.append("\t\t").append(node.getId()).append(";\n");<a name="line.404"></a>
-<span class="sourceLineNo">405</span>         }<a name="line.405"></a>
-<span class="sourceLineNo">406</span>         writer.append("\t}\n");<a name="line.406"></a>
-<span class="sourceLineNo">407</span>         }<a name="line.407"></a>
-<span class="sourceLineNo">408</span>         */<a name="line.408"></a>
-<span class="sourceLineNo">409</span>        Map&lt;GraphVizCluster, List&lt;GraphVizCluster&gt;&gt; clusterMap = newClusterMap();<a name="line.409"></a>
-<span class="sourceLineNo">410</span>        writeClustersTo(writer, clusterMap, null, 0);<a name="line.410"></a>
-<span class="sourceLineNo">411</span>        writer.write("}\n");<a name="line.411"></a>
-<span class="sourceLineNo">412</span>        writer.flush();<a name="line.412"></a>
-<span class="sourceLineNo">413</span>    }<a name="line.413"></a>
-<span class="sourceLineNo">414</span><a name="line.414"></a>
-<span class="sourceLineNo">415</span>    public void writeTo(@Nonnull OutputStream out) throws IOException {<a name="line.415"></a>
-<span class="sourceLineNo">416</span>        writeTo(new OutputStreamWriter(out, Charsets.UTF_8));<a name="line.416"></a>
-<span class="sourceLineNo">417</span>    }<a name="line.417"></a>
-<span class="sourceLineNo">418</span><a name="line.418"></a>
-<span class="sourceLineNo">419</span>    public void writeTo(@Nonnull File file) throws IOException {<a name="line.419"></a>
-<span class="sourceLineNo">420</span>        ByteSink sink = Files.asByteSink(file);<a name="line.420"></a>
-<span class="sourceLineNo">421</span>        OutputStream out = sink.openBufferedStream();<a name="line.421"></a>
-<span class="sourceLineNo">422</span>        try {<a name="line.422"></a>
-<span class="sourceLineNo">423</span>            writeTo(out);<a name="line.423"></a>
-<span class="sourceLineNo">424</span>        } finally {<a name="line.424"></a>
-<span class="sourceLineNo">425</span>            out.close();<a name="line.425"></a>
-<span class="sourceLineNo">426</span>        }<a name="line.426"></a>
-<span class="sourceLineNo">427</span>    }<a name="line.427"></a>
-<span class="sourceLineNo">428</span><a name="line.428"></a>
-<span class="sourceLineNo">429</span>    @Nonnull<a name="line.429"></a>
-<span class="sourceLineNo">430</span>    public String writeToString() throws IOException {<a name="line.430"></a>
-<span class="sourceLineNo">431</span>        StringWriter writer = new StringWriter();<a name="line.431"></a>
-<span class="sourceLineNo">432</span>        writeTo(writer);<a name="line.432"></a>
-<span class="sourceLineNo">433</span>        return writer.toString();<a name="line.433"></a>
-<span class="sourceLineNo">434</span>    }<a name="line.434"></a>
-<span class="sourceLineNo">435</span><a name="line.435"></a>
-<span class="sourceLineNo">436</span>    @Override<a name="line.436"></a>
-<span class="sourceLineNo">437</span>    public String toString() {<a name="line.437"></a>
-<span class="sourceLineNo">438</span>        return "GraphVizGraph(" + nodes.size() + " nodes, " + edges.size() + " edges)";<a name="line.438"></a>
-<span class="sourceLineNo">439</span>    }<a name="line.439"></a>
-<span class="sourceLineNo">440</span>}<a name="line.440"></a>
+<span class="sourceLineNo">382</span>        for (Map.Entry&lt;GraphVizEdge.Key, GraphVizEdge&gt; ee : edges.entrySet()) {<a name="line.382"></a>
+<span class="sourceLineNo">383</span>            // GraphVizEdge.Key key = ee.getKey();<a name="line.383"></a>
+<span class="sourceLineNo">384</span>            GraphVizEdge edge = ee.getValue();<a name="line.384"></a>
+<span class="sourceLineNo">385</span><a name="line.385"></a>
+<span class="sourceLineNo">386</span>            writeCommentsTo(writer, edge.getComments(), 1);<a name="line.386"></a>
+<span class="sourceLineNo">387</span>            writer.append("\t").append(edge.getSourceId()).append(" -&gt; ").append(edge.getTargetId()).append(" [");<a name="line.387"></a>
+<span class="sourceLineNo">388</span>            boolean first = true;<a name="line.388"></a>
+<span class="sourceLineNo">389</span>            // first = append(writer, "color", edge.getColor(), true, first);<a name="line.389"></a>
+<span class="sourceLineNo">390</span>            // first = append(writer, "style", edge.getStyle(), true, first);<a name="line.390"></a>
+<span class="sourceLineNo">391</span>            first = append(writer, "arrowhead", edge.getHeadShape(), true, first);<a name="line.391"></a>
+<span class="sourceLineNo">392</span>            first = append(writer, "arrowtail", edge.getTailShape(), true, first);<a name="line.392"></a>
+<span class="sourceLineNo">393</span>            first = append(writer, "label", edge.getLabel(), true, first);<a name="line.393"></a>
+<span class="sourceLineNo">394</span>            first = append(writer, "headlabel", edge.getHeadLabel(), true, first);<a name="line.394"></a>
+<span class="sourceLineNo">395</span>            first = append(writer, "taillabel", edge.getTailLabel(), true, first);<a name="line.395"></a>
+<span class="sourceLineNo">396</span>            first = append(writer, "lhead", edge.getLogicalHead(), false, first);<a name="line.396"></a>
+<span class="sourceLineNo">397</span>            first = append(writer, "ltail", edge.getLogicalTail(), false, first);<a name="line.397"></a>
+<span class="sourceLineNo">398</span>            for (Map.Entry&lt;? extends String, ? extends String&gt; e : edge.getAttributes().entrySet())<a name="line.398"></a>
+<span class="sourceLineNo">399</span>                first = append(writer, e.getKey(), e.getValue(), true, first);<a name="line.399"></a>
+<span class="sourceLineNo">400</span>            writer.append("];\n");<a name="line.400"></a>
+<span class="sourceLineNo">401</span>        }<a name="line.401"></a>
+<span class="sourceLineNo">402</span><a name="line.402"></a>
+<span class="sourceLineNo">403</span>        /*<a name="line.403"></a>
+<span class="sourceLineNo">404</span>         for (GraphVizCluster cluster : clusters.values()) {<a name="line.404"></a>
+<span class="sourceLineNo">405</span>         writer.append("\tsubgraph ").append(cluster.getId()).append(" {\n");<a name="line.405"></a>
+<span class="sourceLineNo">406</span>         if (cluster.getLabel() != null)<a name="line.406"></a>
+<span class="sourceLineNo">407</span>         writer.append("\t\t").append("label=\"").append(String.valueOf(cluster.getLabel())).append("\";\n");<a name="line.407"></a>
+<span class="sourceLineNo">408</span>         for (GraphVizNode.Key key : cluster.getNodeKeys()) {<a name="line.408"></a>
+<span class="sourceLineNo">409</span>         GraphVizNode node = node(key.getScope(), key.getObject());<a name="line.409"></a>
+<span class="sourceLineNo">410</span>         writer.append("\t\t").append(node.getId()).append(";\n");<a name="line.410"></a>
+<span class="sourceLineNo">411</span>         }<a name="line.411"></a>
+<span class="sourceLineNo">412</span>         writer.append("\t}\n");<a name="line.412"></a>
+<span class="sourceLineNo">413</span>         }<a name="line.413"></a>
+<span class="sourceLineNo">414</span>         */<a name="line.414"></a>
+<span class="sourceLineNo">415</span>        Map&lt;GraphVizCluster, List&lt;GraphVizCluster&gt;&gt; clusterMap = newClusterMap();<a name="line.415"></a>
+<span class="sourceLineNo">416</span>        writeClustersTo(writer, clusterMap, null, 0);<a name="line.416"></a>
+<span class="sourceLineNo">417</span>        writer.write("}\n");<a name="line.417"></a>
+<span class="sourceLineNo">418</span>        writer.flush();<a name="line.418"></a>
+<span class="sourceLineNo">419</span>    }<a name="line.419"></a>
+<span class="sourceLineNo">420</span><a name="line.420"></a>
+<span class="sourceLineNo">421</span>    public void writeTo(@Nonnull OutputStream out) throws IOException {<a name="line.421"></a>
+<span class="sourceLineNo">422</span>        writeTo(new OutputStreamWriter(out, Charsets.UTF_8));<a name="line.422"></a>
+<span class="sourceLineNo">423</span>    }<a name="line.423"></a>
+<span class="sourceLineNo">424</span><a name="line.424"></a>
+<span class="sourceLineNo">425</span>    public void writeTo(@Nonnull File file) throws IOException {<a name="line.425"></a>
+<span class="sourceLineNo">426</span>        ByteSink sink = Files.asByteSink(file);<a name="line.426"></a>
+<span class="sourceLineNo">427</span>        OutputStream out = sink.openBufferedStream();<a name="line.427"></a>
+<span class="sourceLineNo">428</span>        try {<a name="line.428"></a>
+<span class="sourceLineNo">429</span>            writeTo(out);<a name="line.429"></a>
+<span class="sourceLineNo">430</span>        } finally {<a name="line.430"></a>
+<span class="sourceLineNo">431</span>            out.close();<a name="line.431"></a>
+<span class="sourceLineNo">432</span>        }<a name="line.432"></a>
+<span class="sourceLineNo">433</span>    }<a name="line.433"></a>
+<span class="sourceLineNo">434</span><a name="line.434"></a>
+<span class="sourceLineNo">435</span>    @Nonnull<a name="line.435"></a>
+<span class="sourceLineNo">436</span>    public String writeToString() throws IOException {<a name="line.436"></a>
+<span class="sourceLineNo">437</span>        StringWriter writer = new StringWriter();<a name="line.437"></a>
+<span class="sourceLineNo">438</span>        writeTo(writer);<a name="line.438"></a>
+<span class="sourceLineNo">439</span>        return writer.toString();<a name="line.439"></a>
+<span class="sourceLineNo">440</span>    }<a name="line.440"></a>
+<span class="sourceLineNo">441</span><a name="line.441"></a>
+<span class="sourceLineNo">442</span>    @Override<a name="line.442"></a>
+<span class="sourceLineNo">443</span>    public String toString() {<a name="line.443"></a>
+<span class="sourceLineNo">444</span>        return "GraphVizGraph(" + nodes.size() + " nodes, " + edges.size() + " edges)";<a name="line.444"></a>
+<span class="sourceLineNo">445</span>    }<a name="line.445"></a>
+<span class="sourceLineNo">446</span>}<a name="line.446"></a>
 
 
 
