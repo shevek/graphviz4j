@@ -79,6 +79,7 @@ public abstract class GraphVizElement<T extends GraphVizElement<?>> {
         return attributes.get(name);
     }
 
+    /** Sets (or removes) an arbitrary String attribute on this element. */
     public void setAttribute(@Nonnull String name, @CheckForNull String value) {
         if (value == null)
             attributes.remove(name);
@@ -86,6 +87,11 @@ public abstract class GraphVizElement<T extends GraphVizElement<?>> {
             attributes.put(name, value);
     }
 
+    /**
+     * Sets (or removes) an arbitrary String attribute on this element.
+     *
+     * @return This object.
+     */
     @Nonnull
     public T attr(@Nonnull String name, @CheckForNull String value) {
         setAttribute(name, value);
