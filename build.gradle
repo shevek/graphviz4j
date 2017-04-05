@@ -7,7 +7,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'org.anarres.gradle:gradle-stdproject-plugin:1.0.7'
+		classpath 'org.anarres.gradle:gradle-stdproject-plugin:1.0.8'
 		classpath 'org.anarres.gradle:gradle-sablecc-plugin:1.0.4'
 	}
 }
