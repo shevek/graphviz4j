@@ -12,5 +12,6 @@ import javax.annotation.Nonnull;
  */
 public interface GraphVizable {
 
+    /** Renders this object into the given GraphVizGraph according to object-defined rules. */
     public void toGraphViz(@Nonnull GraphVizGraph graph);
 }

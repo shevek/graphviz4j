@@ -14,13 +14,14 @@ import org.anarres.graphviz.builder.GraphVizEdge;
 import org.anarres.graphviz.builder.GraphVizGraph;
 import org.anarres.graphviz.builder.GraphVizNode;
 import org.anarres.graphviz.builder.GraphVizScope;
+import org.anarres.graphviz.builder.GraphVizable;
 import org.jgrapht.Graph;
 
 /**
  *
  * @author shevek
  */
-public class JGraphTGraphVizBuilder<V, E> implements GraphVizScope {
+public class JGraphTGraphVizBuilder<V, E> implements GraphVizScope, GraphVizable {
 
     private static final Function<Object, String> EDGE_LABEL_NULL = Functions.constant(null);
 
@@ -64,7 +65,8 @@ public class JGraphTGraphVizBuilder<V, E> implements GraphVizScope {
         return this;
     }
 
-    public void build(@Nonnull GraphVizGraph out) {
+    @Override
+    public void toGraphViz(@Nonnull GraphVizGraph out) {
         for (V node : graph.vertexSet()) {
             GraphVizNode n = out.node(scope, node);
             String label = nodeLabelFunction.apply(node);
@@ -83,5 +85,11 @@ public class JGraphTGraphVizBuilder<V, E> implements GraphVizScope {
             if (tailLabel != null)
                 e.tailLabel(tailLabel);
         }
+    }
+
+    /** Use {@link #toGraphViz(GraphVizGraph)}. */
+    @Deprecated
+    public void build(@Nonnull GraphVizGraph out) {
+        toGraphViz(out);
     }
 }
