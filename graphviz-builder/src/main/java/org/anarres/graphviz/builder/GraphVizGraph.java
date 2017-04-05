@@ -98,6 +98,16 @@ public class GraphVizGraph {
         return graphOptions;
     }
 
+    @CheckForNull
+    public String getGraphOption(@Nonnull String key) {
+        return graphOptions.get(key);
+    }
+
+    @CheckForNull
+    public String getGraphOption(GraphVizGraphOption key) {
+        return getGraphOption(key.name());
+    }
+
     public void setGraphOption(@Nonnull String key, @CheckForNull String value) {
         if (value == null)
             graphOptions.remove(key);
@@ -390,7 +400,8 @@ public class GraphVizGraph {
             // first = append(writer, "style", edge.getStyle(), true, first);
             first = append(writer, "arrowhead", edge.getHeadShape(), true, first);
             first = append(writer, "arrowtail", edge.getTailShape(), true, first);
-            first = append(writer, "label", edge.getLabel(), true, first);
+            String labelKey = getGraphOption(GraphVizGraphOption.forcelabels) == null ? "label" : "xlabel";
+            first = append(writer, labelKey, edge.getLabel(), true, first);
             first = append(writer, "headlabel", edge.getHeadLabel(), true, first);
             first = append(writer, "taillabel", edge.getTailLabel(), true, first);
             first = append(writer, "lhead", edge.getLogicalHead(), false, first);

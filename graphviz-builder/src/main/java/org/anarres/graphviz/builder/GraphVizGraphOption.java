@@ -11,6 +11,6 @@ package org.anarres.graphviz.builder;
  */
 public enum GraphVizGraphOption {
 
-    rankdir,;
+    rankdir, ranksep, forcelabels;
 
 }
