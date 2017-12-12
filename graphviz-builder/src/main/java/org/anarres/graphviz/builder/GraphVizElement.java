@@ -105,7 +105,7 @@ public abstract class GraphVizElement<T extends GraphVizElement<?>> {
 
     @Nonnull
     @SuppressWarnings("unchecked")
-    public T color(@Nonnull String color) {
+    public T color(@CheckForNull String color) {
         return attr(ATTR_COLOR, color);
     }
 
@@ -116,7 +116,7 @@ public abstract class GraphVizElement<T extends GraphVizElement<?>> {
 
     @Nonnull
     @SuppressWarnings("unchecked")
-    public T style(@Nonnull String style) {
+    public T style(@CheckForNull String style) {
         return attr(ATTR_STYLE, style);
     }
 }
