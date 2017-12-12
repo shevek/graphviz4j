@@ -29,7 +29,7 @@ subprojects {
 	}
 
 	dependencies {
-		compile 'com.google.code.findbugs:annotations:2.0.3'
+		compile 'com.google.code.findbugs:annotations:3.0.1'
 		compile 'org.slf4j:slf4j-api:1.7.12'
 	}
 
