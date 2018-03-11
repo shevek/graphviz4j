@@ -18,7 +18,11 @@ import javax.annotation.Nonnull;
  */
 public abstract class GraphVizElement<T extends GraphVizElement<?>> {
 
+    /** Use GraphVizAttribute. */
+    @Deprecated
     public static final String ATTR_COLOR = "color";
+    /** Use GraphVizAttribute. */
+    @Deprecated
     public static final String ATTR_STYLE = "style";
 
     @Nonnull
@@ -79,12 +83,22 @@ public abstract class GraphVizElement<T extends GraphVizElement<?>> {
         return attributes.get(name);
     }
 
+    @CheckForNull
+    public String getAttribute(@Nonnull GraphVizAttribute name) {
+        return getAttribute(name.name());
+    }
+
     /** Sets (or removes) an arbitrary String attribute on this element. */
     public void setAttribute(@Nonnull String name, @CheckForNull String value) {
         if (value == null)
             attributes.remove(name);
         else
             attributes.put(name, value);
+    }
+
+    /** Sets (or removes) an arbitrary String attribute on this element. */
+    public void setAttribute(@Nonnull GraphVizAttribute name, @CheckForNull String value) {
+        setAttribute(name.name(), value);
     }
 
     /**
@@ -98,25 +112,46 @@ public abstract class GraphVizElement<T extends GraphVizElement<?>> {
         return (T) this;
     }
 
+    /**
+     * Sets (or removes) an arbitrary String attribute on this element.
+     *
+     * @return This object.
+     */
+    @Nonnull
+    public T attr(@Nonnull GraphVizAttribute name, @CheckForNull String value) {
+        return attr(name.name(), value);
+    }
+
     @CheckForNull
     public String getColor() {
-        return getAttribute(ATTR_COLOR);
+        return getAttribute(GraphVizAttribute.color);
     }
 
     @Nonnull
     @SuppressWarnings("unchecked")
     public T color(@CheckForNull String color) {
-        return attr(ATTR_COLOR, color);
+        return attr(GraphVizAttribute.color, color);
     }
 
     @CheckForNull
     public String getStyle() {
-        return getAttribute(ATTR_STYLE);
+        return getAttribute(GraphVizAttribute.style);
     }
 
     @Nonnull
     @SuppressWarnings("unchecked")
     public T style(@CheckForNull String style) {
-        return attr(ATTR_STYLE, style);
+        return attr(GraphVizAttribute.style, style);
+    }
+
+    @CheckForNull
+    public String getHref() {
+        return getAttribute(GraphVizAttribute.href);
+    }
+
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    public T href(String value) {
+        return attr(GraphVizAttribute.href, value);
     }
 }

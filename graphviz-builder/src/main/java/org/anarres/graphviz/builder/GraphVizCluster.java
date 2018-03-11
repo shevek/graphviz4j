@@ -56,4 +56,11 @@ public class GraphVizCluster extends GraphVizObject<GraphVizCluster> {
             nodeKeys.add(new GraphVizObject.Key(scope, object));
         return this;
     }
+
+    @Nonnull
+    public GraphVizCluster add(@Nonnull GraphVizScope scope, @Nonnull Iterable<Object> objects) {
+        for (Object object : objects)
+            nodeKeys.add(new GraphVizObject.Key(scope, object));
+        return this;
+    }
 }

@@ -167,4 +167,10 @@ public class GraphVizEdge extends GraphVizElement<GraphVizEdge> {
         this.logicalTail = logicalTail;
         return this;
     }
+
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    public GraphVizEdge constraint(boolean value) {
+        return attr(GraphVizAttribute.constraint, Boolean.toString(value));
+    }
 }
