@@ -12,42 +12,75 @@
 <span class="sourceLineNo">004</span> */<a name="line.4"></a>
 <span class="sourceLineNo">005</span>package org.anarres.graphviz.builder;<a name="line.5"></a>
 <span class="sourceLineNo">006</span><a name="line.6"></a>
-<span class="sourceLineNo">007</span>import javax.annotation.CheckForNull;<a name="line.7"></a>
-<span class="sourceLineNo">008</span>import javax.annotation.Nonnull;<a name="line.8"></a>
-<span class="sourceLineNo">009</span><a name="line.9"></a>
-<span class="sourceLineNo">010</span>/**<a name="line.10"></a>
-<span class="sourceLineNo">011</span> *<a name="line.11"></a>
-<span class="sourceLineNo">012</span> * @author shevek<a name="line.12"></a>
-<span class="sourceLineNo">013</span> */<a name="line.13"></a>
-<span class="sourceLineNo">014</span>public class GraphVizNode extends GraphVizObject&lt;GraphVizNode&gt; {<a name="line.14"></a>
-<span class="sourceLineNo">015</span><a name="line.15"></a>
-<span class="sourceLineNo">016</span>    public static final String ATTR_SHAPE = "shape";<a name="line.16"></a>
-<span class="sourceLineNo">017</span>    public static final String ATTR_HREF = "href";<a name="line.17"></a>
-<span class="sourceLineNo">018</span><a name="line.18"></a>
-<span class="sourceLineNo">019</span>    /* pp */ GraphVizNode(@Nonnull GraphVizGraph graph, @Nonnull Key key, int id) {<a name="line.19"></a>
-<span class="sourceLineNo">020</span>        super(graph, key, "n" + id);<a name="line.20"></a>
-<span class="sourceLineNo">021</span>    }<a name="line.21"></a>
-<span class="sourceLineNo">022</span><a name="line.22"></a>
-<span class="sourceLineNo">023</span>    @CheckForNull<a name="line.23"></a>
-<span class="sourceLineNo">024</span>    public String getShape() {<a name="line.24"></a>
-<span class="sourceLineNo">025</span>        return getAttribute(ATTR_SHAPE);<a name="line.25"></a>
-<span class="sourceLineNo">026</span>    }<a name="line.26"></a>
+<span class="sourceLineNo">007</span>import java.util.LinkedHashMap;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import java.util.Map;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import javax.annotation.CheckForNull;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import javax.annotation.Nonnull;<a name="line.10"></a>
+<span class="sourceLineNo">011</span><a name="line.11"></a>
+<span class="sourceLineNo">012</span>/**<a name="line.12"></a>
+<span class="sourceLineNo">013</span> *<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * @author shevek<a name="line.14"></a>
+<span class="sourceLineNo">015</span> */<a name="line.15"></a>
+<span class="sourceLineNo">016</span>public class GraphVizNode extends GraphVizObject&lt;GraphVizNode&gt; {<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>    /** Use GraphVizAttribute. */<a name="line.18"></a>
+<span class="sourceLineNo">019</span>    @Deprecated<a name="line.19"></a>
+<span class="sourceLineNo">020</span>    public static final String ATTR_SHAPE = "shape";<a name="line.20"></a>
+<span class="sourceLineNo">021</span>    /** Use GraphVizAttribute. */<a name="line.21"></a>
+<span class="sourceLineNo">022</span>    @Deprecated<a name="line.22"></a>
+<span class="sourceLineNo">023</span>    public static final String ATTR_HREF = "href";<a name="line.23"></a>
+<span class="sourceLineNo">024</span><a name="line.24"></a>
+<span class="sourceLineNo">025</span>    private Map&lt;GraphVizPort.Key, GraphVizPort&gt; ports;<a name="line.25"></a>
+<span class="sourceLineNo">026</span>    private int counter = 0;<a name="line.26"></a>
 <span class="sourceLineNo">027</span><a name="line.27"></a>
-<span class="sourceLineNo">028</span>    @Nonnull<a name="line.28"></a>
-<span class="sourceLineNo">029</span>    public GraphVizNode shape(@CheckForNull String shape) {<a name="line.29"></a>
-<span class="sourceLineNo">030</span>        return attr(ATTR_SHAPE, shape);<a name="line.30"></a>
-<span class="sourceLineNo">031</span>    }<a name="line.31"></a>
-<span class="sourceLineNo">032</span><a name="line.32"></a>
-<span class="sourceLineNo">033</span>    @CheckForNull<a name="line.33"></a>
-<span class="sourceLineNo">034</span>    public String getHref() {<a name="line.34"></a>
-<span class="sourceLineNo">035</span>        return getAttribute(ATTR_HREF);<a name="line.35"></a>
-<span class="sourceLineNo">036</span>    }<a name="line.36"></a>
-<span class="sourceLineNo">037</span><a name="line.37"></a>
-<span class="sourceLineNo">038</span>    @Nonnull<a name="line.38"></a>
-<span class="sourceLineNo">039</span>    public GraphVizNode href(@CheckForNull String href) {<a name="line.39"></a>
-<span class="sourceLineNo">040</span>        return attr(ATTR_HREF, href);<a name="line.40"></a>
-<span class="sourceLineNo">041</span>    }<a name="line.41"></a>
-<span class="sourceLineNo">042</span>}<a name="line.42"></a>
+<span class="sourceLineNo">028</span>    /* pp */ GraphVizNode(@Nonnull GraphVizGraph graph, @Nonnull Key key, int id) {<a name="line.28"></a>
+<span class="sourceLineNo">029</span>        super(graph, key, "n" + id);<a name="line.29"></a>
+<span class="sourceLineNo">030</span>    }<a name="line.30"></a>
+<span class="sourceLineNo">031</span><a name="line.31"></a>
+<span class="sourceLineNo">032</span>    @CheckForNull<a name="line.32"></a>
+<span class="sourceLineNo">033</span>    public String getShape() {<a name="line.33"></a>
+<span class="sourceLineNo">034</span>        return getAttribute(GraphVizAttribute.shape);<a name="line.34"></a>
+<span class="sourceLineNo">035</span>    }<a name="line.35"></a>
+<span class="sourceLineNo">036</span><a name="line.36"></a>
+<span class="sourceLineNo">037</span>    @Nonnull<a name="line.37"></a>
+<span class="sourceLineNo">038</span>    public GraphVizNode shape(@CheckForNull String shape) {<a name="line.38"></a>
+<span class="sourceLineNo">039</span>        return attr(GraphVizAttribute.shape, shape);<a name="line.39"></a>
+<span class="sourceLineNo">040</span>    }<a name="line.40"></a>
+<span class="sourceLineNo">041</span><a name="line.41"></a>
+<span class="sourceLineNo">042</span>    @Nonnull<a name="line.42"></a>
+<span class="sourceLineNo">043</span>    public GraphVizPort port(@Nonnull Object object) {<a name="line.43"></a>
+<span class="sourceLineNo">044</span>        GraphVizPort.Key key = new GraphVizPort.Key(getScope(), object);<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        if (!getGraph().isScopeVisible(key.getScope()))<a name="line.45"></a>
+<span class="sourceLineNo">046</span>            return new GraphVizPort(this, key, -1);<a name="line.46"></a>
+<span class="sourceLineNo">047</span>        if (ports == null)<a name="line.47"></a>
+<span class="sourceLineNo">048</span>            ports = new LinkedHashMap&lt;GraphVizPort.Key, GraphVizPort&gt;();<a name="line.48"></a>
+<span class="sourceLineNo">049</span>        GraphVizPort port = ports.get(key);<a name="line.49"></a>
+<span class="sourceLineNo">050</span>        if (port == null) {<a name="line.50"></a>
+<span class="sourceLineNo">051</span>            int id = counter++;<a name="line.51"></a>
+<span class="sourceLineNo">052</span>            port = new GraphVizPort(this, key, id);<a name="line.52"></a>
+<span class="sourceLineNo">053</span>            ports.put(key, port);<a name="line.53"></a>
+<span class="sourceLineNo">054</span>        }<a name="line.54"></a>
+<span class="sourceLineNo">055</span>        return port;<a name="line.55"></a>
+<span class="sourceLineNo">056</span>    }<a name="line.56"></a>
+<span class="sourceLineNo">057</span><a name="line.57"></a>
+<span class="sourceLineNo">058</span>    @CheckForNull<a name="line.58"></a>
+<span class="sourceLineNo">059</span>    public String toLabelString() {<a name="line.59"></a>
+<span class="sourceLineNo">060</span>        GraphVizLabel label = getLabel();<a name="line.60"></a>
+<span class="sourceLineNo">061</span>        if (ports == null || ports.isEmpty()) {<a name="line.61"></a>
+<span class="sourceLineNo">062</span>            if (label == null)<a name="line.62"></a>
+<span class="sourceLineNo">063</span>                return null;<a name="line.63"></a>
+<span class="sourceLineNo">064</span>            return label.toString();<a name="line.64"></a>
+<span class="sourceLineNo">065</span>        }<a name="line.65"></a>
+<span class="sourceLineNo">066</span>        GraphVizRecordLabel recordLabel = new GraphVizRecordLabel();<a name="line.66"></a>
+<span class="sourceLineNo">067</span>        if (label != null)<a name="line.67"></a>
+<span class="sourceLineNo">068</span>            recordLabel.title(label.getBuffer().toString());<a name="line.68"></a>
+<span class="sourceLineNo">069</span>        for (Map.Entry&lt;Key, GraphVizPort&gt; e : ports.entrySet()) {<a name="line.69"></a>
+<span class="sourceLineNo">070</span>            GraphVizPort port = e.getValue();<a name="line.70"></a>
+<span class="sourceLineNo">071</span>            recordLabel.field(port.getPortId(), port.label().getBuffer().toString());<a name="line.71"></a>
+<span class="sourceLineNo">072</span>        }<a name="line.72"></a>
+<span class="sourceLineNo">073</span>        return recordLabel.toString();<a name="line.73"></a>
+<span class="sourceLineNo">074</span>    }<a name="line.74"></a>
+<span class="sourceLineNo">075</span>}<a name="line.75"></a>
 
 
 
