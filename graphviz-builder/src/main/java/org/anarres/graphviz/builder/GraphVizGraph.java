@@ -385,7 +385,7 @@ public class GraphVizGraph {
             // first = append(writer, "shape", node.getShape(), true, first);
             String text = node.toLabelString();
             if (text != null) {
-                GraphVizLabel label = node.getLabel();
+                // GraphVizLabel label = node.getLabel();
                 // I don't like this much, it's too heuristic.
                 // However, I think escaping of < is required by default, so this should actually be safe.
                 boolean html = text.startsWith("<");
