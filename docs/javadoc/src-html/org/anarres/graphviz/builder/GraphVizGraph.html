@@ -393,7 +393,7 @@
 <span class="sourceLineNo">385</span>            // first = append(writer, "shape", node.getShape(), true, first);<a name="line.385"></a>
 <span class="sourceLineNo">386</span>            String text = node.toLabelString();<a name="line.386"></a>
 <span class="sourceLineNo">387</span>            if (text != null) {<a name="line.387"></a>
-<span class="sourceLineNo">388</span>                GraphVizLabel label = node.getLabel();<a name="line.388"></a>
+<span class="sourceLineNo">388</span>                // GraphVizLabel label = node.getLabel();<a name="line.388"></a>
 <span class="sourceLineNo">389</span>                // I don't like this much, it's too heuristic.<a name="line.389"></a>
 <span class="sourceLineNo">390</span>                // However, I think escaping of &lt; is required by default, so this should actually be safe.<a name="line.390"></a>
 <span class="sourceLineNo">391</span>                boolean html = text.startsWith("&lt;");<a name="line.391"></a>
