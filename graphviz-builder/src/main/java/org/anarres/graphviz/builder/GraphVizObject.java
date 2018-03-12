@@ -4,7 +4,7 @@
  */
 package org.anarres.graphviz.builder;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import javax.annotation.Nonnull;
 
@@ -56,7 +56,7 @@ public abstract class GraphVizObject<T extends GraphVizObject<?>> extends GraphV
 
         @Override
         public String toString() {
-            return Objects.toStringHelper(this)
+            return MoreObjects.toStringHelper(this)
                     .add("scope", scope.getClass().getSimpleName() + "@" + System.identityHashCode(scope))
                     .add("object", object.getClass().getSimpleName() + "@" + System.identityHashCode(object))
                     .toString();

@@ -383,7 +383,17 @@ public class GraphVizGraph {
             // first = append(writer, "color", node.getColor(), true, first);
             // first = append(writer, "style", node.getStyle(), true, first);
             // first = append(writer, "shape", node.getShape(), true, first);
-            first = append(writer, "label", node.getLabel(), true, first);
+            String text = node.toLabelString();
+            if (text != null) {
+                GraphVizLabel label = node.getLabel();
+                // I don't like this much, it's too heuristic.
+                // However, I think escaping of < is required by default, so this should actually be safe.
+                boolean html = text.startsWith("<");
+                if (html)
+                    first = append(writer, "label", "<" + text + ">", false, first);
+                else
+                    first = append(writer, "label", text, true, first);
+            }
             for (Map.Entry<? extends String, ? extends String> e : node.getAttributes().entrySet())
                 first = append(writer, e.getKey(), e.getValue(), true, first);
             writer.append("];\n");
@@ -394,7 +404,9 @@ public class GraphVizGraph {
             GraphVizEdge edge = ee.getValue();
 
             writeCommentsTo(writer, edge.getComments(), 1);
-            writer.append("\t").append(edge.getSourceId()).append(" -> ").append(edge.getTargetId()).append(" [");
+            writer.append("\t").append(edge.getSourceId());
+            writer.append(" -> ").append(edge.getTargetId());
+            writer.append(" [");
             boolean first = true;
             // first = append(writer, "color", edge.getColor(), true, first);
             // first = append(writer, "style", edge.getStyle(), true, first);

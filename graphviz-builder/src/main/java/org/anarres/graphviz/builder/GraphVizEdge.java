@@ -169,7 +169,6 @@ public class GraphVizEdge extends GraphVizElement<GraphVizEdge> {
     }
 
     @Nonnull
-    @SuppressWarnings("unchecked")
     public GraphVizEdge constraint(boolean value) {
         return attr(GraphVizAttribute.constraint, Boolean.toString(value));
     }

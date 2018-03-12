@@ -6,6 +6,8 @@
 package org.anarres.graphviz.builder;
 
 import com.google.common.base.Preconditions;
+import com.google.common.escape.Escaper;
+import com.google.common.escape.Escapers;
 import java.io.File;
 import java.io.IOException;
 import javax.annotation.CheckForNull;
@@ -17,6 +19,18 @@ import javax.annotation.Nonnull;
  * @author shevek
  */
 public class GraphVizUtils {
+
+    public static final Escaper ESCAPE_HTML = Escapers.builder()
+            .addEscape('\\', "\\\\")
+            .addEscape('\"', "\\\"")
+            .addEscape('{', "\\{")
+            .addEscape('}', "\\}")
+            .addEscape('<', "&lt;")
+            .addEscape('>', "&gt;")
+            .addEscape('&', "&amp;")
+            .addEscape('\n', "<BR/>")
+            .addEscape('\r', "")
+            .build();
 
     /* pp */ static int hashCode(@CheckForNull Object o) {
         return o == null ? 0 : o.hashCode();

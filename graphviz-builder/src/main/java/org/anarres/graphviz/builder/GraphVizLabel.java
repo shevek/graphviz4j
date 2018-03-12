@@ -4,16 +4,32 @@
  */
 package org.anarres.graphviz.builder;
 
+import com.google.common.escape.Escaper;
+import com.google.common.escape.Escapers;
 import java.io.Serializable;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
 /**
+ * Stores the data literally in the buffer; it's escaped later when we know whether
+ * this will be a graphviz escString or an HTML label.
  *
  * @author shevek
  */
 public class GraphVizLabel implements Appendable, Serializable {
+
+    private static final Escaper gvEscaper = Escapers.builder()
+            .addEscape('\\', "\\\\")
+            .addEscape('\"', "\\\"")
+            .addEscape('{', "\\{")
+            .addEscape('}', "\\}")
+            .addEscape('<', "&lt;")
+            .addEscape('>', "&gt;")
+            .addEscape('>', "&amp;")
+            .addEscape('\n', "\\l")
+            .addEscape('\r', "")
+            .build();
 
     private final StringBuilder buf = new StringBuilder();
 
@@ -54,47 +70,20 @@ public class GraphVizLabel implements Appendable, Serializable {
     public GraphVizLabel append(@Nonnull CharSequence csq, @Nonnegative int start, @Nonnegative int end) {
         if (end > csq.length())
             end = csq.length();
-        for (int i = start; i < end; i++) {
-            append(csq.charAt(i));
-        }
+        buf.append(csq, start, end);
         return this;
     }
 
     @Nonnull
     @Override
     public GraphVizLabel append(char c) {
-        switch (c) {
-            case '\\':
-            case '"':
-            case '{':
-            case '}':
-                buf.append("\\");
-                buf.append(c);
-                break;
-            case '<':
-                buf.append("&lt;");
-                break;
-            case '>':
-                buf.append("&gt;");
-                break;
-            case '&':
-                buf.append("&amp;");
-                break;
-            case '\n':
-                buf.append("\\l");
-                break;
-            case '\r':
-                break;
-            default:
-                buf.append(c);
-                break;
-        }
+        buf.append(c);
         return this;
     }
 
     @Nonnull
     @Override
     public String toString() {
-        return buf.toString();
+        return gvEscaper.escape(buf.toString());
     }
 }
