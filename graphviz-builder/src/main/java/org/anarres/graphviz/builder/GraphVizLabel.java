@@ -26,7 +26,7 @@ public class GraphVizLabel implements Appendable, Serializable {
             .addEscape('}', "\\}")
             .addEscape('<', "&lt;")
             .addEscape('>', "&gt;")
-            .addEscape('>', "&amp;")
+            .addEscape('&', "&amp;")
             .addEscape('\n', "\\l")
             .addEscape('\r', "")
             .build();
