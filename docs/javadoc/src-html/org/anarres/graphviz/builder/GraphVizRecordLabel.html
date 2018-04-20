@@ -15,8 +15,8 @@
 <span class="sourceLineNo">007</span><a name="line.7"></a>
 <span class="sourceLineNo">008</span>import com.google.common.escape.Escaper;<a name="line.8"></a>
 <span class="sourceLineNo">009</span>import com.google.common.escape.Escapers;<a name="line.9"></a>
-<span class="sourceLineNo">010</span>import java.util.LinkedHashMap;<a name="line.10"></a>
-<span class="sourceLineNo">011</span>import java.util.Map;<a name="line.11"></a>
+<span class="sourceLineNo">010</span>import java.util.ArrayList;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import java.util.List;<a name="line.11"></a>
 <span class="sourceLineNo">012</span>import javax.annotation.CheckForNull;<a name="line.12"></a>
 <span class="sourceLineNo">013</span>import javax.annotation.Nonnull;<a name="line.13"></a>
 <span class="sourceLineNo">014</span><a name="line.14"></a>
@@ -37,7 +37,7 @@
 <span class="sourceLineNo">029</span><a name="line.29"></a>
 <span class="sourceLineNo">030</span>    @CheckForNull<a name="line.30"></a>
 <span class="sourceLineNo">031</span>    private String title;<a name="line.31"></a>
-<span class="sourceLineNo">032</span>    private final Map&lt;String, String&gt; fields = new LinkedHashMap&lt;String, String&gt;();<a name="line.32"></a>
+<span class="sourceLineNo">032</span>    private final List&lt;GraphVizPort&gt; ports = new ArrayList&lt;GraphVizPort&gt;();<a name="line.32"></a>
 <span class="sourceLineNo">033</span><a name="line.33"></a>
 <span class="sourceLineNo">034</span>    @Nonnull<a name="line.34"></a>
 <span class="sourceLineNo">035</span>    public GraphVizRecordLabel title(@CheckForNull String title) {<a name="line.35"></a>
@@ -46,27 +46,39 @@
 <span class="sourceLineNo">038</span>    }<a name="line.38"></a>
 <span class="sourceLineNo">039</span><a name="line.39"></a>
 <span class="sourceLineNo">040</span>    @Nonnull<a name="line.40"></a>
-<span class="sourceLineNo">041</span>    public GraphVizRecordLabel field(@Nonnull String port, @Nonnull String text) {<a name="line.41"></a>
-<span class="sourceLineNo">042</span>        fields.put(port, text);<a name="line.42"></a>
+<span class="sourceLineNo">041</span>    public GraphVizRecordLabel field(@Nonnull GraphVizPort port) {<a name="line.41"></a>
+<span class="sourceLineNo">042</span>        ports.add(port);<a name="line.42"></a>
 <span class="sourceLineNo">043</span>        return this;<a name="line.43"></a>
 <span class="sourceLineNo">044</span>    }<a name="line.44"></a>
 <span class="sourceLineNo">045</span><a name="line.45"></a>
-<span class="sourceLineNo">046</span>    @Override<a name="line.46"></a>
-<span class="sourceLineNo">047</span>    public String toString() {<a name="line.47"></a>
-<span class="sourceLineNo">048</span>        StringBuilder buf = new StringBuilder();<a name="line.48"></a>
-<span class="sourceLineNo">049</span>        buf.append("&lt;TABLE ALIGN=\"LEFT\" BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"&gt;");<a name="line.49"></a>
-<span class="sourceLineNo">050</span>        if (title != null)<a name="line.50"></a>
-<span class="sourceLineNo">051</span>            buf.append("&lt;TR&gt;&lt;TD BALIGN=\"LEFT\"&gt;").append(E(title)).append("&lt;/TD&gt;&lt;/TR&gt;");<a name="line.51"></a>
-<span class="sourceLineNo">052</span>        for (Map.Entry&lt;String, String&gt; e : fields.entrySet()) {<a name="line.52"></a>
-<span class="sourceLineNo">053</span>            String port = e.getKey();<a name="line.53"></a>
-<span class="sourceLineNo">054</span>            String text = e.getValue();<a name="line.54"></a>
-<span class="sourceLineNo">055</span>            buf.append("&lt;TR&gt;&lt;TD BALIGN=\"LEFT\" PORT=\"").append(port).append("\"&gt;")<a name="line.55"></a>
-<span class="sourceLineNo">056</span>                    .append(E(text)).append("&lt;/TD&gt;&lt;/TR&gt;");<a name="line.56"></a>
-<span class="sourceLineNo">057</span>        }<a name="line.57"></a>
-<span class="sourceLineNo">058</span>        buf.append("&lt;/TABLE&gt;");<a name="line.58"></a>
-<span class="sourceLineNo">059</span>        return buf.toString();<a name="line.59"></a>
-<span class="sourceLineNo">060</span>    }<a name="line.60"></a>
-<span class="sourceLineNo">061</span>}<a name="line.61"></a>
+<span class="sourceLineNo">046</span>    private void toStringAttribute(@Nonnull StringBuilder out, @Nonnull GraphVizPort port, @Nonnull GraphVizAttribute attribute, @Nonnull String key) {<a name="line.46"></a>
+<span class="sourceLineNo">047</span>        String value = port.getAttribute(attribute);<a name="line.47"></a>
+<span class="sourceLineNo">048</span>        if (value == null)<a name="line.48"></a>
+<span class="sourceLineNo">049</span>            return ;<a name="line.49"></a>
+<span class="sourceLineNo">050</span>        out.append(" ").append(key).append("=\"").append(value).append("\"");<a name="line.50"></a>
+<span class="sourceLineNo">051</span>    }<a name="line.51"></a>
+<span class="sourceLineNo">052</span><a name="line.52"></a>
+<span class="sourceLineNo">053</span>    @Override<a name="line.53"></a>
+<span class="sourceLineNo">054</span>    public String toString() {<a name="line.54"></a>
+<span class="sourceLineNo">055</span>        StringBuilder buf = new StringBuilder();<a name="line.55"></a>
+<span class="sourceLineNo">056</span>        buf.append("&lt;TABLE ALIGN=\"LEFT\" BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\"&gt;");<a name="line.56"></a>
+<span class="sourceLineNo">057</span>        if (title != null)<a name="line.57"></a>
+<span class="sourceLineNo">058</span>            buf.append("&lt;TR&gt;&lt;TD BALIGN=\"LEFT\" PORT=\"_title\"&gt;").append(E(title)).append("&lt;/TD&gt;&lt;/TR&gt;");<a name="line.58"></a>
+<span class="sourceLineNo">059</span>        for (GraphVizPort port : ports) {<a name="line.59"></a>
+<span class="sourceLineNo">060</span>            String label = port.label().getBuffer().toString();<a name="line.60"></a>
+<span class="sourceLineNo">061</span>            buf.append("&lt;TR&gt;&lt;TD BALIGN=\"LEFT\" PORT=\"").append(port.getPortId()).append("\"");<a name="line.61"></a>
+<span class="sourceLineNo">062</span>            // port.getAttribute(GraphVizAttribute.color)<a name="line.62"></a>
+<span class="sourceLineNo">063</span>            toStringAttribute(buf, port, GraphVizAttribute.color, "BGCOLOR");<a name="line.63"></a>
+<span class="sourceLineNo">064</span>            toStringAttribute(buf, port, GraphVizAttribute.penwidth, "BORDER");<a name="line.64"></a>
+<span class="sourceLineNo">065</span>            toStringAttribute(buf, port, GraphVizAttribute.fontcolor, "COLOR");<a name="line.65"></a>
+<span class="sourceLineNo">066</span>            toStringAttribute(buf, port, GraphVizAttribute.href, "HREF");<a name="line.66"></a>
+<span class="sourceLineNo">067</span>            toStringAttribute(buf, port, GraphVizAttribute.tooltip, "TITLE");<a name="line.67"></a>
+<span class="sourceLineNo">068</span>            buf.append("&gt;").append(E(label)).append("&lt;/TD&gt;&lt;/TR&gt;");<a name="line.68"></a>
+<span class="sourceLineNo">069</span>        }<a name="line.69"></a>
+<span class="sourceLineNo">070</span>        buf.append("&lt;/TABLE&gt;");<a name="line.70"></a>
+<span class="sourceLineNo">071</span>        return buf.toString();<a name="line.71"></a>
+<span class="sourceLineNo">072</span>    }<a name="line.72"></a>
+<span class="sourceLineNo">073</span>}<a name="line.73"></a>
 
 
 

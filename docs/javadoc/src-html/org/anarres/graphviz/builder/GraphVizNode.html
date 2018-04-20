@@ -74,13 +74,11 @@
 <span class="sourceLineNo">066</span>        GraphVizRecordLabel recordLabel = new GraphVizRecordLabel();<a name="line.66"></a>
 <span class="sourceLineNo">067</span>        if (label != null)<a name="line.67"></a>
 <span class="sourceLineNo">068</span>            recordLabel.title(label.getBuffer().toString());<a name="line.68"></a>
-<span class="sourceLineNo">069</span>        for (Map.Entry&lt;Key, GraphVizPort&gt; e : ports.entrySet()) {<a name="line.69"></a>
-<span class="sourceLineNo">070</span>            GraphVizPort port = e.getValue();<a name="line.70"></a>
-<span class="sourceLineNo">071</span>            recordLabel.field(port.getPortId(), port.label().getBuffer().toString());<a name="line.71"></a>
-<span class="sourceLineNo">072</span>        }<a name="line.72"></a>
-<span class="sourceLineNo">073</span>        return recordLabel.toString();<a name="line.73"></a>
-<span class="sourceLineNo">074</span>    }<a name="line.74"></a>
-<span class="sourceLineNo">075</span>}<a name="line.75"></a>
+<span class="sourceLineNo">069</span>        for (Map.Entry&lt;Key, GraphVizPort&gt; e : ports.entrySet())<a name="line.69"></a>
+<span class="sourceLineNo">070</span>            recordLabel.field(e.getValue());<a name="line.70"></a>
+<span class="sourceLineNo">071</span>        return recordLabel.toString();<a name="line.71"></a>
+<span class="sourceLineNo">072</span>    }<a name="line.72"></a>
+<span class="sourceLineNo">073</span>}<a name="line.73"></a>
 
 
 
