@@ -7,8 +7,8 @@ package org.anarres.graphviz.builder;
 
 import com.google.common.escape.Escaper;
 import com.google.common.escape.Escapers;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
@@ -29,7 +29,7 @@ public class GraphVizRecordLabel {
 
     @CheckForNull
     private String title;
-    private final Map<String, String> fields = new LinkedHashMap<String, String>();
+    private final List<GraphVizPort> ports = new ArrayList<GraphVizPort>();
 
     @Nonnull
     public GraphVizRecordLabel title(@CheckForNull String title) {
@@ -38,9 +38,16 @@ public class GraphVizRecordLabel {
     }
 
     @Nonnull
-    public GraphVizRecordLabel field(@Nonnull String port, @Nonnull String text) {
-        fields.put(port, text);
+    public GraphVizRecordLabel field(@Nonnull GraphVizPort port) {
+        ports.add(port);
         return this;
+    }
+
+    private void toStringAttribute(@Nonnull StringBuilder out, @Nonnull GraphVizPort port, @Nonnull GraphVizAttribute attribute, @Nonnull String key) {
+        String value = port.getAttribute(attribute);
+        if (value == null)
+            return ;
+        out.append(" ").append(key).append("=\"").append(value).append("\"");
     }
 
     @Override
@@ -48,12 +55,17 @@ public class GraphVizRecordLabel {
         StringBuilder buf = new StringBuilder();
         buf.append("<TABLE ALIGN=\"LEFT\" BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\">");
         if (title != null)
-            buf.append("<TR><TD BALIGN=\"LEFT\">").append(E(title)).append("</TD></TR>");
-        for (Map.Entry<String, String> e : fields.entrySet()) {
-            String port = e.getKey();
-            String text = e.getValue();
-            buf.append("<TR><TD BALIGN=\"LEFT\" PORT=\"").append(port).append("\">")
-                    .append(E(text)).append("</TD></TR>");
+            buf.append("<TR><TD BALIGN=\"LEFT\" PORT=\"_title\">").append(E(title)).append("</TD></TR>");
+        for (GraphVizPort port : ports) {
+            String label = port.label().getBuffer().toString();
+            buf.append("<TR><TD BALIGN=\"LEFT\" PORT=\"").append(port.getPortId()).append("\"");
+            // port.getAttribute(GraphVizAttribute.color)
+            toStringAttribute(buf, port, GraphVizAttribute.color, "BGCOLOR");
+            toStringAttribute(buf, port, GraphVizAttribute.penwidth, "BORDER");
+            toStringAttribute(buf, port, GraphVizAttribute.fontcolor, "COLOR");
+            toStringAttribute(buf, port, GraphVizAttribute.href, "HREF");
+            toStringAttribute(buf, port, GraphVizAttribute.tooltip, "TITLE");
+            buf.append(">").append(E(label)).append("</TD></TR>");
         }
         buf.append("</TABLE>");
         return buf.toString();
