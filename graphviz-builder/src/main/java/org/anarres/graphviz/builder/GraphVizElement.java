@@ -154,4 +154,15 @@ public abstract class GraphVizElement<T extends GraphVizElement<?>> {
     public T href(String value) {
         return attr(GraphVizAttribute.href, value);
     }
+
+    @CheckForNull
+    public String getTooltip() {
+        return getAttribute(GraphVizAttribute.tooltip);
+    }
+
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    public T tooltip(String value) {
+        return attr(GraphVizAttribute.tooltip, value);
+    }
 }
