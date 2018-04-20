@@ -54,12 +54,18 @@ public abstract class GraphVizObject<T extends GraphVizObject<?>> extends GraphV
                     && getObject().equals(k.getObject());
         }
 
+        protected void toStringHelper(@Nonnull MoreObjects.ToStringHelper helper) {
+            helper
+                    .add("scope", scope.getClass().getSimpleName() + "@" + System.identityHashCode(scope))
+                    .add("object", object.getClass().getSimpleName() + "@" + System.identityHashCode(object));
+
+        }
+
         @Override
         public String toString() {
-            return MoreObjects.toStringHelper(this)
-                    .add("scope", scope.getClass().getSimpleName() + "@" + System.identityHashCode(scope))
-                    .add("object", object.getClass().getSimpleName() + "@" + System.identityHashCode(object))
-                    .toString();
+            MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(this);
+            toStringHelper(helper);
+            return helper.toString();
         }
 
     }
@@ -87,5 +93,18 @@ public abstract class GraphVizObject<T extends GraphVizObject<?>> extends GraphV
     @Nonnull
     /* pp */ String getId() {
         return id;
+    }
+
+    protected void toStringHelper(@Nonnull MoreObjects.ToStringHelper helper) {
+        helper
+                .add("id", getId());
+        getKey().toStringHelper(helper);
+    }
+
+    @Override
+    public String toString() {
+        MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(this);
+        toStringHelper(helper);
+        return helper.toString();
     }
 }
