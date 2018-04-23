@@ -48,7 +48,7 @@ public class GraphVizRecordLabel {
 
     }
 
-    @CheckForNull
+    @Nonnull
     private GraphVizNode node;
     private final List<GraphVizPort> ports;
 
