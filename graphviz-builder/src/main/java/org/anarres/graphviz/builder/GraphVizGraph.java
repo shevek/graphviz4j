@@ -7,6 +7,7 @@ package org.anarres.graphviz.builder;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Charsets;
 import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.io.ByteSink;
@@ -187,6 +188,8 @@ public class GraphVizGraph {
      */
     @Nonnull
     public GraphVizEdge edge(@Nonnull GraphVizObject<?> source, @Nonnull GraphVizObject<?> target, @CheckForNull Object edgeId) {
+        Preconditions.checkNotNull(source, "Source was null.");
+        Preconditions.checkNotNull(target, "Target was null.");
         GraphVizEdge.Key key = new GraphVizEdge.Key(source.getKey(), target.getKey(), edgeId);
         if (!isScopeVisible(source.getScope()))
             return new GraphVizEdge(this, key, "", "");

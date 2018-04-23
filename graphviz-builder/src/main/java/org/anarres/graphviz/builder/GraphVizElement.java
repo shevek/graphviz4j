@@ -85,7 +85,12 @@ public abstract class GraphVizElement<T extends GraphVizElement<?>> {
 
     @CheckForNull
     public String getAttribute(@Nonnull GraphVizAttribute name) {
-        return getAttribute(name.name());
+        return getAttribute(name.getName());
+    }
+
+    @CheckForNull
+    public String getAttribute(@Nonnull GraphVizHtmlAttribute name) {
+        return getAttribute(name.getName());
     }
 
     /** Sets (or removes) an arbitrary String attribute on this element. */
@@ -96,9 +101,22 @@ public abstract class GraphVizElement<T extends GraphVizElement<?>> {
             attributes.put(name, value);
     }
 
-    /** Sets (or removes) an arbitrary String attribute on this element. */
+    /**
+     * Sets (or removes) a well-known attribute on this element.
+     *
+     * Well-known attributes share the same namespace as string attributes.
+     */
     public void setAttribute(@Nonnull GraphVizAttribute name, @CheckForNull String value) {
-        setAttribute(name.name(), value);
+        setAttribute(name.getName(), value);
+    }
+
+    /**
+     * Sets (or removes) a well-known attribute on this element.
+     *
+     * Well-known attributes share the same namespace as string attributes.
+     */
+    public void setAttribute(@Nonnull GraphVizHtmlAttribute name, @CheckForNull String value) {
+        setAttribute(name.getName(), value);
     }
 
     /**
@@ -113,13 +131,27 @@ public abstract class GraphVizElement<T extends GraphVizElement<?>> {
     }
 
     /**
-     * Sets (or removes) an arbitrary String attribute on this element.
+     * Sets (or removes) a well-known attribute on this element.
+     *
+     * Well-known attributes share the same namespace as string attributes.
      *
      * @return This object.
      */
     @Nonnull
     public T attr(@Nonnull GraphVizAttribute name, @CheckForNull String value) {
         return attr(name.name(), value);
+    }
+
+    /**
+     * Sets (or removes) a well-known attribute on this element.
+     *
+     * Well-known attributes share the same namespace as string attributes.
+     *
+     * @return This object.
+     */
+    @Nonnull
+    public T attr(@Nonnull GraphVizHtmlAttribute name, @CheckForNull String value) {
+        return attr(name.getName(), value);
     }
 
     @CheckForNull

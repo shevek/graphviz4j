@@ -63,11 +63,7 @@ public class GraphVizNode extends GraphVizObject<GraphVizNode> {
                 return null;
             return label.toString();
         }
-        GraphVizRecordLabel recordLabel = new GraphVizRecordLabel();
-        if (label != null)
-            recordLabel.title(label.getBuffer().toString());
-        for (Map.Entry<Key, GraphVizPort> e : ports.entrySet())
-            recordLabel.field(e.getValue());
+        GraphVizRecordLabel recordLabel = new GraphVizRecordLabel(this, ports.values());
         return recordLabel.toString();
     }
 }

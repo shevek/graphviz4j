@@ -181,4 +181,9 @@ public enum GraphVizAttribute {
     xlabel,
     xlp,
     z,;
+
+    /** Returns the graphviz name of this attribute, which differs from name() in the case that the attribute name was not a legal Java name. */
+    public String getName() {
+        return name();
+    }
 }
