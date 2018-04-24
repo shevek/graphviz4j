@@ -62,7 +62,8 @@ public class GraphVizLabel implements Appendable, Serializable {
     @Nonnull
     @Override
     public GraphVizLabel append(@Nonnull CharSequence csq) {
-        return append(csq, 0, csq.length());
+        buf.append(csq);    // This has a fast-path in Java.
+        return this;
     }
 
     @Nonnull
