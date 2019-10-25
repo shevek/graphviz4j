@@ -28,6 +28,9 @@ public class GraphVizRecordLabel {
     private static final Escaper ESCAPE_MINIMAL = Escapers.builder()
             .addEscape('\n', "<BR/>")
             .addEscape('\r', "")
+            .addEscape('<', "&lt;")
+            .addEscape('>', "&gt;")
+            .addEscape('&', "&amp;")
             .build();
 
     private static String E(@Nonnull GraphVizLabel in) {
