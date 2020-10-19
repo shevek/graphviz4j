@@ -120,6 +120,10 @@ public class GraphVizGraph {
         setGraphOption(key.name(), value);
     }
 
+    public void setGraphOption(@Nonnull GraphVizAttribute key, @CheckForNull String value) {
+        setGraphOption(key.name(), value);
+    }
+
     private void clear(@Nonnull GraphVizScope scope, @Nonnull Iterable<? extends GraphVizObject.Key> data) {
         Iterator<? extends GraphVizObject.Key> it = data.iterator();
         while (it.hasNext()) {
