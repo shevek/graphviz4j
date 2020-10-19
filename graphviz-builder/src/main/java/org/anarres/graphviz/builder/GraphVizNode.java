@@ -41,7 +41,7 @@ public class GraphVizNode extends GraphVizObject<GraphVizNode> {
 
     @Nonnull
     public GraphVizPort port(@Nonnull Object object) {
-        GraphVizPort.Key key = new GraphVizPort.Key(getScope(), object);
+        GraphVizPort.Key key = new GraphVizPort.Key(this, object);
         if (!getGraph().isScopeVisible(key.getScope()))
             return new GraphVizPort(this, key, -1);
         if (ports == null)
