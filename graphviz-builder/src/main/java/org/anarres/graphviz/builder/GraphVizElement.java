@@ -5,8 +5,8 @@
 package org.anarres.graphviz.builder;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.CheckForNull;
@@ -27,7 +27,7 @@ public abstract class GraphVizElement<T extends GraphVizElement<?>> {
 
     @Nonnull
     private final GraphVizGraph graph;
-    private final Set<String> comments = new HashSet<String>();
+    private final Set<String> comments = new LinkedHashSet<String>();
     @CheckForNull
     private GraphVizLabel label;
     @Nonnull

@@ -4,7 +4,7 @@
  */
 package org.anarres.graphviz.builder;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -18,9 +18,9 @@ public class GraphVizCluster extends GraphVizObject<GraphVizCluster> {
     @CheckForNull
     private final GraphVizCluster parent;
     @Nonnull
-    private final Set<GraphVizCluster.Key> clusterKeys = new HashSet<GraphVizCluster.Key>();
+    private final Set<GraphVizCluster.Key> clusterKeys = new LinkedHashSet<GraphVizCluster.Key>();
     @Nonnull
-    private final Set<GraphVizNode.Key> nodeKeys = new HashSet<GraphVizNode.Key>();
+    private final Set<GraphVizNode.Key> nodeKeys = new LinkedHashSet<GraphVizNode.Key>();
 
     /* pp */ GraphVizCluster(@Nonnull GraphVizGraph graph, @Nonnull Key key, @CheckForNull GraphVizCluster parent, int id) {
         super(graph, key, (parent == null ? "cluster_c" : parent.getId() + "_") + id);

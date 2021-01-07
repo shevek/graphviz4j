@@ -21,9 +21,9 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,11 +45,11 @@ public class GraphVizGraph {
     @CheckForNull
     private GraphVizLabel label;
     private final Predicate<? super GraphVizScope> scopes;
-    private transient final Set<String> comments = new HashSet<String>();
-    private transient final Map<String, String> graphOptions = new HashMap<String, String>();
-    private transient final Map<GraphVizNode.Key, GraphVizNode> nodes = new HashMap<GraphVizNode.Key, GraphVizNode>();
-    private transient final Map<GraphVizEdge.Key, GraphVizEdge> edges = new HashMap<GraphVizEdge.Key, GraphVizEdge>();
-    private transient final Map<GraphVizCluster.Key, GraphVizCluster> clusters = new HashMap<GraphVizCluster.Key, GraphVizCluster>();
+    private transient final Set<String> comments = new LinkedHashSet<String>();
+    private transient final Map<String, String> graphOptions = new LinkedHashMap<String, String>();
+    private transient final Map<GraphVizNode.Key, GraphVizNode> nodes = new LinkedHashMap<GraphVizNode.Key, GraphVizNode>();
+    private transient final Map<GraphVizEdge.Key, GraphVizEdge> edges = new LinkedHashMap<GraphVizEdge.Key, GraphVizEdge>();
+    private transient final Map<GraphVizCluster.Key, GraphVizCluster> clusters = new LinkedHashMap<GraphVizCluster.Key, GraphVizCluster>();
 
     public GraphVizGraph(@Nonnull Predicate<? super GraphVizScope> scopes) {
         this.scopes = scopes;
@@ -343,7 +343,7 @@ public class GraphVizGraph {
     /** This map allows null keys, and the null key should be present. */
     @Nonnull
     private Map<GraphVizCluster, List<GraphVizCluster>> newClusterMap() {
-        Map<GraphVizCluster, List<GraphVizCluster>> clusterMap = new HashMap<GraphVizCluster, List<GraphVizCluster>>();
+        Map<GraphVizCluster, List<GraphVizCluster>> clusterMap = new LinkedHashMap<GraphVizCluster, List<GraphVizCluster>>();
         for (GraphVizCluster child : clusters.values()) {
             @CheckForNull
             GraphVizCluster parent = child.getParent();
